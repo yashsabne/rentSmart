@@ -1,0 +1,158 @@
+ 
+
+body {
+  background-color: #121212;
+  font-family: Arial, sans-serif;
+  color: #e0e0e0;
+}
+
+.contact-owner-page {
+padding: 20px 0 20px 0px;
+}
+
+.intro-section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.intro-heading {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.intro-description {
+  font-size: 1.2rem;
+  color: #9e9e9e;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.contact-options-section {
+  padding: 40px 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+}
+
+.contact-options-grid {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-option-card {
+  background-color: #2a2a2a;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 280px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.contact-option-card:hover {
+  
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.icon {
+  font-size: 3rem;
+  color: #64b5f6;
+  margin-bottom: 15px;
+}
+
+.contact-button { 
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff; 
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 15px 0 0 0;
+}
+
+
+.contact-button:hover {
+  background-color: #1565c0;
+}
+
+.faq-section {
+  padding: 40px 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  margin-top: 50px;
+}
+
+.faq-list {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  margin-bottom: 20px;
+}
+
+.faq-item h3 {
+  font-size: 1.4rem;
+  color: #64b5f6;
+}
+
+.faq-item p {
+  font-size: 1rem;
+  color: #cfd8dc;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .contact-options-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
+.a_contact {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+ 
+}
+
+/* Premium Chat Button */
+.premium-button {
+  background-color: #A77B06; /* Deep Gold */
+}
+
+.premium-button:hover {
+  background-color: #8C6A04; /* Darker Gold */
+}
+
+/* Email Contact Button */
+.email-button {
+  background-color: #007C91; /* Teal Blue */
+}
+
+.email-button:hover {
+  background-color: #006478; /* Darker Teal */
+}
+
+/* Secure Payment Button */
+.reveal-button {
+  background-color: #2E7D32; /* Dark Green */
+}
+
+.reveal-button:hover {
+  background-color: #1B5E20; /* Darker Green */
+}
+  

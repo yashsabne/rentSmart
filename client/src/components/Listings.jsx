@@ -18,8 +18,8 @@ const Listings = () => {
     try {
       const response = await fetch(
         selectedCategory !== "All"
-          ? `http://localhost:3001/properties?category=${selectedCategory}`
-          : "http://localhost:3001/properties",
+          ? `${process.env.BASE_BACKEND_URL}/properties?category=${selectedCategory}`
+          :  `${process.env.BASE_BACKEND_URL}/properties`,
         {
           method: "GET",
         }
@@ -67,7 +67,7 @@ const Listings = () => {
               category,
               type,
               price,
-              booking=false
+              promoted = false
             }) => (
               <ListingCard
                 listingId={_id}
@@ -79,7 +79,7 @@ const Listings = () => {
                 category={category}
                 type={type}
                 price={price}
-                booking={booking}
+                promoted={promoted}
               />
             )
           )}

@@ -1,23 +1,70 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Node.js dependencies
 /node_modules
-/.pnp
-.pnp.js
+**/node_modules
 
-# testing
-/coverage
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# production
-/build
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# misc
-.DS_Store
+# Dependency directories
+jspm_packages/
+
+# Environment variables
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Frontend build files
+/build
+/dist
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# Vercel and Render config
+.vercel
+.output
+render.yaml
+
+# IDE specific files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# macOS specific files
+.DS_Store
+
+# Sentry files
+.sentryclirc
+
+# Coverage directory used by testing tools
+/coverage
+
+# Temp files
+*.tmp
+*.temp
+
+# Firebase
+.firebase
+
+# Generated files for deployment
+yarn.lock
+package-lock.json
+
+# Git files
+.gitignore

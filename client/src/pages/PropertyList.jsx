@@ -1,4 +1,4 @@
-import "../styles/List.scss";
+import "../styles/List.css";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import ListingCard from "../components/ListingCard";
@@ -11,12 +11,14 @@ const PropertyList = () => {
   const [loading, setLoading] = useState(true)
   const user = useSelector((state) => state.user)
   const propertyList = user?.propertyList;
-  console.log(user)
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
+
+
   const getPropertyList = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${user._id}/properties`, {
+      const response = await fetch(`${backendUrl}/users/${user._id}/properties`, {
         method: "GET"
       })
       const data = await response.json()
@@ -48,7 +50,7 @@ const PropertyList = () => {
             category,
             type,
             price,
-            booking = false,
+            promoted = false,
           }) => (
             <ListingCard
               listingId={_id}
@@ -59,8 +61,8 @@ const PropertyList = () => {
               country={country}
               category={category}
               type={type}
-              price={price}
-              booking={booking}
+              price={price} 
+              promoted = {promoted}
             />
           )
         )}

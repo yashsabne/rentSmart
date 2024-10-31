@@ -1,0 +1,469 @@
+.create-listing {
+  background-color: #1e1e2d;  
+  padding: 40px 60px 120px;
+  margin-top: 50px;
+}
+
+@media (max-width: 768px) {
+  .create-listing {
+    padding: 40px 20px;
+  }
+}
+
+.create-listing h1 {
+  color: #00b3b3;  
+}
+
+.create-listing_step1 {
+  background-color: #2b2b3d;  
+  padding: 30px 40px;
+  border-radius: 20px;
+  margin-top: 40px;
+}
+
+@media (max-width: 576px) {
+  .create-listing_step1 {
+    padding: 30px 20px;
+  }
+}
+
+.create-listing_step1 h2 {
+  color: #ff6b6b; 
+}
+
+.create-listing_step1 hr {
+  margin: 15px 0 25px;
+  border-color: #444;  
+}
+
+.create-listing_step1 h3 {
+  margin: 40px 0 20px;
+  color: #00b3b3;  
+}
+
+.category-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+@media (max-width: 992px) {
+  .category-list {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-list {
+    padding: 0;
+  }
+}
+
+.category-list .category {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 90px;
+  border: 1px solid #444;  
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.category-list .category_icon {
+  font-size: 30px;
+  color: #fff;  
+}
+
+.category-list .category p {
+  font-weight: 600;
+  text-align: center;
+  color: #fff;  
+}
+
+.category-list .category:hover {
+  border: 2px solid #00b3b3;  
+  background-color: #3d3d50;  
+}
+
+.category-list .selected {
+  border: 2px solid #ff6b6b;    
+  background-color: #3d3d50;
+}
+
+.create-listing_step1 .type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-listing_step1 .type-list .type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 600px;
+  padding: 15px 30px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.create-listing_step1 .type-list .type_text h4 {
+  margin-bottom: 5px;
+  color: #fff; /* Light text */
+}
+
+.create-listing_step1 .type-list .type_icon {
+  font-size: 30px;
+  color: #fff;
+}
+.type-list p {
+  color: rgb(255, 208, 146);
+}
+
+.create-listing_step1 .type-list .type:hover {
+  border: 2px solid #fecece;
+  background-color: #3d3d50;
+}
+
+.create-listing_step1 .type-list .selected {
+  border: 2px solid #fecece;
+  background-color: #3d3d50;
+}
+
+.create-listing_step1 .full {
+  max-width: 700px;
+}
+
+.create-listing_step1 .half {
+  max-width: 700px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+@media (max-width: 1024px) {
+  .create-listing_step1 .half {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.create-listing_step1 .location p {
+  font-weight: 700;
+  margin: 20px 0 10px;
+  color: #fff;
+}
+
+.create-listing_step1 .location input {
+  border: 1px solid #444;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  background-color: #3d3d50; /* Dark input background */
+  color: #fff;
+}
+
+.create-listing_step1 .location input:focus {
+  outline: none;
+  border-color: #00b3b3; /* Teal focus border */
+}
+
+.create-listing_step1 .basics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.create-listing_step1 .basics .basic {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 15px;
+  border: 1px solid #444;
+  border-radius: 10px;
+}
+
+.create-listing_step1 .basics .basic p {
+  font-weight: 600;
+  color: #fff;
+}
+
+.create-listing_step1 .basics .basic_count {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.create-listing_step2 {
+  background-color: #2b2b3d;
+  padding: 30px 40px;
+  border-radius: 20px;
+  margin-top: 40px; 
+}
+
+@media (max-width: 576px) {
+  .create-listing_step2 {
+    padding: 30px 20px;
+  }
+}
+
+.create-listing_step2 h2 {
+  color: #ff6b6b;
+}
+
+.create-listing_step2 hr {
+  margin: 15px 0 25px;
+  border-color: #444;
+}
+
+.create-listing_step2 h3 {
+  margin: 40px 0 20px;
+  color: #00b3b3;
+}
+
+.create-listing_step2 .amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.create-listing_step2 .amenities .facility {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 90px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.create-listing_step2 .amenities .facility_icon {
+  font-size: 30px;
+  color: #fff;
+}
+
+.create-listing_step2 .amenities .facility p {
+  font-weight: 600;
+  color: #fff;
+}
+
+.create-listing_step2 .amenities .facility:hover {
+  border: 2px solid #00b3b3;
+  background-color: #3d3d50;
+}
+
+.create-listing_step2 .amenities .selected {
+  border: 2px solid #ff6b6b;
+  background-color: #3d3d50;
+}
+
+.create-listing_step2 .photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.create-listing_step2 .photos .photo {
+  position: relative;
+  width: 250px;
+  height: 150px;
+  cursor: move;
+}
+
+.create-listing_step2 .photos .photo img {
+  width: 100%;
+  height: 100%;
+}
+
+.create-listing_step2 .photos .photo button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 3px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.create-listing_step2 .photos .photo button:hover {
+  color: #00b3b3;
+}
+
+.create-listing_step2 .photos label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px dashed #444;
+}
+
+.create-listing_step2 .photos label .icon {
+  font-size: 60px;
+  color: #00b3b3;
+}
+
+.create-listing_step2 .photos label p {
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+}
+
+.create-listing_step2 .photos .together {
+  width: 250px;
+  height: 150px;
+}
+
+.create-listing_step2 .photos .alone {
+  padding: 40px 100px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .create-listing_step2 .photos .alone {
+    padding: 40px 80px;
+  }
+}
+
+@media (max-width: 576px) {
+  .create-listing_step2 .photos .alone {
+    padding: 40px 30px;
+  }
+}
+
+.create-listing_step2 .title input {
+  border: 1px solid #444;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  background-color: #3d3d50;
+  color: #fff;
+}
+
+.create-listing_step2 .title input:focus {
+  outline: none;
+  border-color: #00b3b3;
+}
+
+.create-listing_step2 .description p {
+  font-weight: 700;
+  margin: 20px 0 10px;
+  color: #fff;
+}
+
+.create-listing_step2 .description input,
+.create-listing_step2 .description textarea {
+  border: 1px solid #444;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  width: 600px;
+  background-color: #3d3d50;
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .create-listing_step2 .description input,
+  .create-listing_step2 .description textarea {
+    width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .create-listing_step2 .description input,
+  .create-listing_step2 .description textarea {
+    width: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .create-listing_step2 .description input,
+  .create-listing_step2 .description textarea {
+    width: 280px;
+  }
+}
+
+.create-listing_step2 .description input:focus,
+.create-listing_step2 .description textarea:focus {
+  outline: none;
+  border-color: #00b3b3;
+}
+
+.create-listing_step2 .description span {
+  font-size: 25px;
+  font-weight: 700;
+  margin-right: 20px;
+  color: #fff;
+}
+
+.create-listing_step2 .description .price {
+  width: 200px;
+}
+
+.submit_btn {
+  margin-top: 40px;
+  background-color: #00b3b3;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.submit_btn:hover {
+  box-shadow: 0 0 10px 3px rgba(0, 179, 179, 0.5);
+}
+.price-payment {
+  width: 100%; /* Make it responsive */
+  max-width: 500px;
+  gap: 10px; 
+}
+
+ 
+ 
+.select-container {
+  width: 100%; /* Full width of container */
+  max-width: 200px; /* Max width for larger screens */
+  background-color: rgb(61, 61, 80);
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: medium;
+  transition: background-color 0.3s ease;
+}
+
+/* Optional: Add a hover effect for desktop */
+.select-container:hover {
+  background-color: rgb(90, 90, 120);
+}
+.line-btwn-sellandtype {
+  border:1px solid grey;
+  margin:20px 0px 20px 0px;
+  width: 600px;
+}
+@media (max-width:760px) {
+  .line-btwn-sellandtype { 
+    width: 100%;
+  }
+}

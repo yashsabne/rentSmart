@@ -1,0 +1,307 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #e0e0e0;
+  background-color: #1e1f26;
+  line-height: 1.6;
+}
+
+.property-list-section {
+  margin-top: 50px; 
+  background-color: #1e1f26;
+  text-align: center;
+}
+
+.section-header-buy {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px;
+}
+
+.heading {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #e3f2fd;
+  margin-bottom: 15px;
+}
+
+.subheading-buy {
+  font-size: 1.4rem;
+  color: #ee6723;
+}
+
+.bgApply {
+  background-image: url('https://preview.redd.it/my-dream-house-is-black-and-dark-but-in-this-sub-all-black-v0-7d9d422tq6ac1.jpeg?auto=webp&s=936ab70450dc880b865b92685cae2271b2e4d249');
+  background-size: cover;
+  background-position: center;  
+  padding: 50px;
+}
+
+.property-grid-wrapper {
+  
+  display: flex;
+  transition: width 0.3s ease;
+}
+
+.property-grid-wrapper.full-width .property-grid {
+  width: 100%;
+}
+
+.property-grid-wrapper.with-sidebar .property-grid {
+  width: calc(100% - 300px);
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.property-card {
+  background: #2c2d35;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.property-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.property-card .card-body {
+  padding: 20px;
+}
+
+.property-card .card-body h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #e3f2fd;
+}
+
+.property-card .card-body p {
+  font-size: 1rem;
+  color: #b0bec5;
+}
+
+.property-card .card-body .price {
+  font-size: 1.2rem;
+  color: #81c784;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.button, .toggle-filter-btn, .clear-filters-button, .show-more-button {
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.button:hover, .toggle-filter-btn:hover, .clear-filters-button:hover, .show-more-button:hover {
+  background-color: #222;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.loader {
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid #42a5f5;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin: 50px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.filter-sidebar {
+  position: sticky; 
+  top: 14vh;
+  right: 20px;
+  max-height: max-content;
+  width: 300px; 
+  background-color: #222;
+  padding: 20px; 
+  border-radius: 0 0px 10px 10px;
+
+}
+
+.filter-sidebar.hide-filters {
+  transform: translateX(-250px);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 220px;
+  margin-bottom: 16px;
+}
+
+.filter-group label {
+  color: #d1d1d1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 12px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #333;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-group input::placeholder {
+  color: #888;
+}
+
+.clear-filters-button {
+  background-color: #ff6b6b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-left: auto;
+}
+
+.clear-filters-button:hover {
+  background-color: #ff3d3d;
+  transform: translateY(-2px);
+}
+
+.togglebtn { 
+  display: flex;
+  justify-content: end;
+  padding-right: 20px;
+  position:fixed;
+  top:  8vh; 
+  right: 0;
+
+  padding-top: 20px; 
+  padding-bottom: 20px; 
+  z-index: 100;
+}
+.toggle-filter-btn {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: #222;
+  border: none;
+  cursor: pointer; 
+}
+
+.icon-open, .icon-close {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.icon-open:hover, .icon-close:hover {
+  transform: scale(1.1);
+}
+
+.show-more-button {
+  background-color: #00d8ff;
+  color: white;
+  padding: 10px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+  margin: 20px auto;
+}
+
+@media screen and (max-width: 768px) {
+  .property-grid-wrapper.with-sidebar .property-grid {
+    width: 100%;
+  }
+
+  .filter-sidebar {
+    width: 250px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .property-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .filter-group input,
+  .filter-group select,
+  .clear-filters-button {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .toggle-filter-btn {
+    margin-top: 10px;
+  }
+  .filter-sidebar {
+    position: fixed; 
+    top: 30%; 
+    right: 10px;
+    max-height: max-content;
+    width: 300px; 
+    background-color: rgba(34, 34, 34, 0.9); 
+    padding: 20px; 
+    border-radius: 0 10px 10px 0; 
+    z-index: 10; 
+  }
+  .togglebtn {
+    display: flex;
+    justify-content: end;
+    padding-right: 20px;
+    position: fixed; 
+    top: 23%; 
+    right: 5px;
+    padding-top: 20px; 
+    z-index: 100;
+  }
+
+  .toggle-filter-btn {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #222;
+    border: none;
+    cursor: pointer;
+
+  }
+
+}
+
+.tip-section-span {
+  margin-right: 10px; 
+  height: max-content;
+  display: none;
+  padding: 8px 2px 5px 8px;
+  background-color: #222;
+  font-size: small;
+}
+
+.togglebtn:hover .tip-section-span {
+  display: block;
+}

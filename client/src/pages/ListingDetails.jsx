@@ -1,192 +1,314 @@
 import { useEffect, useState } from "react";
-import "../styles/ListingDetails.scss";
-import { useNavigate, useParams } from "react-router-dom";
+import "../styles/ListingDetails.css";
+import { useParams, useNavigate } from "react-router-dom";
 import { facilities } from "../data";
-
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
-import { DateRange } from "react-date-range";
 import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useSelector } from "react-redux";
-import Footer from "../components/Footer"
+import { CiHome, CiBookmarkPlus } from "react-icons/ci";
+
+
 
 const ListingDetails = () => {
-  const [loading, setLoading] = useState(true);
 
+  const [loading, setLoading] = useState(true);
   const { listingId } = useParams();
   const [listing, setListing] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isSliding, setIsSliding] = useState(false);
+  const [message, setMessage] = useState('');
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const userId = user._id
+
+  const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
+  const razorpay_key = process.env.REACT_APP_RAZORPAY_KEY;
+ 
+
 
   const getListingDetails = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/properties/${listingId}`,
-        {
-          method: "GET",
-        }
-      );
-
+      const response = await fetch(`${backendUrl}/properties/${listingId}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
       const data = await response.json();
       setListing(data);
       setLoading(false);
     } catch (err) {
       console.log("Fetch Listing Details Failed", err.message);
+      setLoading(false); // Stop loading on error
     }
   };
 
   useEffect(() => {
     getListingDetails();
-  }, []);
+  }, [listingId]);
 
-  console.log(listing)
-
-
-  /* BOOKING CALENDAR */
-  const [dateRange, setDateRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
-
-  const handleSelect = (ranges) => {
-    // Update the selected date range when user makes a selection
-    setDateRange([ranges.selection]);
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this property?");
+    if (confirmDelete) {
+      try {
+        await fetch(`${backendUrl}/properties/${listingId}`, { method: "DELETE" });
+        alert("Property deleted successfully.");
+        navigate("/"); // Redirect to homepage after deletion
+      } catch (err) {
+        console.log("Delete Property Failed", err.message);
+      }
+    }
   };
 
-  const start = new Date(dateRange[0].startDate);
-  const end = new Date(dateRange[0].endDate);
-  const dayCount = Math.round(end - start) / (1000 * 60 * 60 * 24); // Calculate the difference in day unit
-
-  /* SUBMIT BOOKING */
-  const customerId = useSelector((state) => state?.user?._id)
-
-  const navigate = useNavigate()
-
-  const handleSubmit = async () => {
+  const handleSaveProperties = async () => {
     try {
-      const bookingForm = {
-        customerId,
-        listingId,
-        hostId: listing.creator._id,
-        startDate: dateRange[0].startDate.toDateString(),
-        endDate: dateRange[0].endDate.toDateString(),
-        totalPrice: listing.price * dayCount,
-      }
-
-      const response = await fetch("http://localhost:3001/bookings/create", {
+      const response = await fetch(`${backendUrl}/users/${userId}/saved-property`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',  // Set the content type to JSON
         },
-        body: JSON.stringify(bookingForm)
-      })
+        body: JSON.stringify({ listing })    // Convert body to JSON string
+      });
+
+      const data = await response.json(); // Parse the response
+      if (response.ok) {
+        setMessage("Property saved successfully!"); // Success message
+      } else {
+        setMessage(data.message); // Error message from the backend
+      }
+    } catch (error) {
+      console.error("Error saving property:", error);
+      setMessage("Failed to save property."); // Display error message
+    }
+  };
+
+  const handlePromoteProperty = async () => {
+    try {
+      const promotionStatusResponse = await fetch(`${backendUrl}/payment/check-promotion-status/${listingId}`);
+      const promotionStatus = await promotionStatusResponse.json();
+
+      console.log(promotionStatus)
+      
+      if (promotionStatus.promoted) {
+        setMessage("This property is already promoted!");
+        return;  
+      }
+  
+      const orderResponse = await fetch(`${backendUrl}/payment/create-order/${listingId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      const { orderId, amount, currency } = await orderResponse.json();
+  
+      const options = {
+        key: razorpay_key,
+        amount: amount.toString(),
+        currency: currency,
+        name: 'Promote Property',
+        description: 'Payment to promote property',
+        order_id: orderId,
+        handler: async (paymentResponse) => {
+          await confirmAndPromote(paymentResponse, listingId, userId);
+        },
+        theme: { color: '#3399cc' }
+      };
+  
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const confirmAndPromote = async (paymentResponse, listingId, userId) => {
+    try {
+      const response = await fetch(`${backendUrl}/payment/promote-property`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentResponse, listingId, userId })
+      });
+      const data = await response.json();
 
       if (response.ok) {
-        navigate(`/${customerId}/trips`)
+        setMessage('Property successfully promoted');
+      } else {
+        setMessage(data.message || 'Promotion failed');
       }
-    } catch (err) {
-      console.log("Submit Booking Failed.", err.message)
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
+
+
+
+  const changeSlide = (direction) => {
+    if (!isSliding) {
+      setIsSliding(true);
+      setTimeout(() => {
+        setIsSliding(false);
+        setCurrentImageIndex((prevIndex) => {
+          if (direction === "next") {
+            return prevIndex === listing.listingPhotoPaths.length - 1 ? 0 : prevIndex + 1;
+          } else {
+            return prevIndex === 0 ? listing.listingPhotoPaths.length - 1 : prevIndex - 1;
+          }
+        });
+      }, 1000);
+    }
+  };
 
   return loading ? (
     <Loader />
   ) : (
     <>
       <Navbar />
-      
-      <div className="listing-details">
-        <div className="title">
-          <h1>{listing.title}</h1>
-          <div></div>
-        </div>
-
-        <div className="photos">
-          {listing.listingPhotoPaths?.map((item) => (
-            <img
-              src={`http://localhost:3001/${item.replace("public", "")}`}
-              alt="listing photo"
-            />
-          ))}
-        </div>
-
-        <h2>
-          {listing.type} in {listing.city}, {listing.province},{" "}
-          {listing.country}
-        </h2>
-        <p>
-          {listing.guestCount} guests - {listing.bedroomCount} bedroom(s) -{" "}
-          {listing.bedCount} bed(s) - {listing.bathroomCount} bathroom(s)
-        </p>
-        <hr />
-
-        <div className="profile">
-          <img
-            src={`http://localhost:3001/${listing.creator.profileImagePath.replace(
-              "public",
-              ""
-            )}`}
-          />
-          <h3>
-            Hosted by {listing.creator.firstName} {listing.creator.lastName}
-          </h3>
-        </div>
-        <hr />
-
-        <h3>Description</h3>
-        <p>{listing.description}</p>
-        <hr />
-
-        <h3>{listing.highlight}</h3>
-        <p>{listing.highlightDesc}</p>
-        <hr />
-
-        <div className="booking">
-          <div>
-            <h2>What this place offers?</h2>
-            <div className="amenities">
-              {listing.amenities[0].split(",").map((item, index) => (
-                <div className="facility" key={index}>
-                  <div className="facility_icon">
-                    {
-                      facilities.find((facility) => facility.name === item)
-                        ?.icon
-                    }
-                  </div>
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
+      <div className="listing-details-container">
+        <div className="listing-header">
+          <div className="title-section">
+            <h1>{listing.title}</h1>
+            {user && user._id === listing.creator._id && (
+              <div className="owner-badge">
+                <CiHome size={24} />
+                <span>My Property</span> <span style={{ marginLeft: '2px', fontSize: 'small', color: 'brown' }} >(id:{listingId})</span>
+              </div>
+            )}
           </div>
+          <div className="location-info">
+            <h3>
+              {listing.type} in {listing.city}, {listing.pincode}, {listing.country}
+            </h3>
+          </div>
+        </div>
+ 
+        <div className="listing-slider">
+          <button
+            onClick={() => changeSlide("prev")}
+            className={`slider-button prev-button ${isSliding ? "disabled" : ""}`}
+          >
+            ◀
+          </button>
+          <div className="slider-image-wrapper">
+            <img
+              src={`${backendUrl}/${listing.listingPhotoPaths[currentImageIndex].replace("public", "")}`}
+              alt={`Listing Image ${currentImageIndex + 1}`}
+              className={`slider-image ${isSliding ? "slide-animation" : ""} gsapImg`}
+            />
+          </div>
+          <button
+            onClick={() => changeSlide("next")}
+            className={`slider-button next-button ${isSliding ? "disabled" : ""}`}
+          >
+            ▶
+          </button>
 
-          <div>
-            <h2>How long do you want to stay?</h2>
-            <div className="date-range-calendar">
-              <DateRange ranges={dateRange} onChange={handleSelect} />
-              {dayCount > 1 ? (
-                <h2>
-                  ${listing.price} x {dayCount} nights
-                </h2>
-              ) : (
-                <h2>
-                  ${listing.price} x {dayCount} night
-                </h2>
+          <div className="slider-indicators">
+            {listing.listingPhotoPaths.map((_, index) => (
+              <span
+                key={index}
+                className={`indicator-dot ${index === currentImageIndex ? "active" : ""}`}
+              ></span>
+            ))}
+          </div>
+        </div>
+
+        <div className="host-section">
+          <div className="profile-card">
+            <img
+              src={`${backendUrl}/${listing.creator.profileImagePath.replace("public", "")}`}
+              alt="Host"
+            />
+            <h3>
+              {user._id === listing.creator._id
+                ? "Hosted by Me"
+                : `Hosted by ${listing.creator.firstName} ${listing.creator.lastName}`}
+            </h3>
+          </div>
+        </div>
+
+        <div className="details-section">
+          <h2>Description</h2>
+          <p>{listing.description}</p>
+          <p style={{ fontWeight: 'bolder', textDecoration: 'underline' }}>
+            {listing.bathroomCount} bathrooms
+          </p>
+
+          {listing.highlight && (
+            <>
+              <h2>{listing.highlight}</h2>
+              <p>{listing.highlightDesc}</p>
+            </>
+          )}
+
+          <h2>Amenities</h2>
+          <div className="amenities-section">
+            {listing.amenities[0].split(",").map((item, index) => (
+              <div className="amenity-card" key={index}>
+                <div className="amenity-icon">
+                  {facilities.find((facility) => facility.name === item)?.icon}
+                </div>
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="property-action">
+
+          {user._id === listing.creator._id ? (
+            <>
+              <div className="action-buttons">
+                <button className="delete-button" onClick={handleDelete}>
+                  Delete Property
+                </button>
+                <button className="promote-property-btn" onClick={handlePromoteProperty} >
+                  Promote Property
+                </button>
+              </div>
+              <div>
+                {message && (
+                  <p
+                    className="message-box"
+                    style={
+                      message === "Property already saved"
+                        ? { color: "red", margin: '10px 0' }
+                        : { color: "green", margin: '10px 0' }
+                    }
+                  >
+                    {message}
+                  </p>
+                )}
+              </div>
+            </>
+          ) : (
+
+            <div className="prop-handel" >
+
+              <button className="contact-button" onClick={handleSaveProperties} >
+                <span className="save-text" > Save for later</span> <span className="save-icon"> <CiBookmarkPlus /></span>
+              </button>
+
+              {message && (
+                <p
+                  className="message-box"
+                  style={
+                    message === "Property already saved"
+                      ? { color: "red", margin: '10px 0' }
+                      : { color: "green", margin: '10px 0' }
+                  }
+                >
+                  {message}
+                </p>
               )}
 
-              <h2>Total price: ${listing.price * dayCount}</h2>
-              <p>Start Date: {dateRange[0].startDate.toDateString()}</p>
-              <p>End Date: {dateRange[0].endDate.toDateString()}</p>
-
-              <button className="button" type="submit" onClick={handleSubmit}>
-                BOOKING
-              </button>
+              <a href={`/users/contact-property-owner?propertyId=${listingId}&userId=${userId}`} style={{ textDecoration: 'none' }} >
+                <button className="contact-button">
+                  Contact Owner
+                </button>
+              </a>
             </div>
-          </div>
+          )}
         </div>
       </div>
-
       <Footer />
     </>
   );

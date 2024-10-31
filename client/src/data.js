@@ -1,47 +1,19 @@
-import { TbBeach, TbMountain, TbPool } from "react-icons/tb";
+import { TbPool } from "react-icons/tb";
 import {
-  GiBarn,
-  GiBoatFishing,
-  GiCactus,
-  GiCastle,
-  GiCaveEntrance,
-  GiForestCamp,
-  GiIsland,
-  GiWindmill,
-} from "react-icons/gi";
+  MdOutlineVilla,
+  MdOutlineBedroomParent,
+  MdApartment,
+  MdBalcony,
+  MdYard,
+} from "react-icons/md";
 import {
-  FaSkiing,
-  FaPumpSoap,
-  FaShower,
-  FaFireExtinguisher,
-  FaUmbrellaBeach,
-  FaKey,
-} from "react-icons/fa";
-import { FaHouseUser, FaPeopleRoof, FaKitchenSet } from "react-icons/fa6";
-import {
-  BiSolidWasher,
-  BiSolidDryer,
-  BiSolidFirstAid,
-  BiWifi,
-  BiSolidFridge,
-  BiWorld,
-} from "react-icons/bi";
-import { BsSnow, BsFillDoorOpenFill, BsPersonWorkspace } from "react-icons/bs";
-import { IoDiamond } from "react-icons/io5";
-import { MdOutlineVilla, MdMicrowave, MdBalcony, MdYard, MdPets } from "react-icons/md";
-import {
-  PiBathtubFill,
-  PiCoatHangerFill,
-  PiTelevisionFill,
-} from "react-icons/pi";
-import { TbIroning3 } from "react-icons/tb";
-import {
-  GiHeatHaze,
-  GiCctvCamera,
-  GiBarbecue,
-  GiToaster,
-  GiCampfire,
-} from "react-icons/gi";
+  BsSnow,
+  BsFillHouseHeartFill,
+} from "react-icons/bs";
+import { PiBathtubFill } from "react-icons/pi";
+import { FaShower } from "react-icons/fa";
+import { GiHeatHaze } from "react-icons/gi";
+import { BiWifi, BiWorld } from "react-icons/bi";
 import { AiFillCar } from "react-icons/ai";
 
 export const categories = [
@@ -50,116 +22,60 @@ export const categories = [
     icon: <BiWorld />,
   },
   {
-    img: "assets/beach_cat.jpg",
-    label: "Beachfront",
-    icon: <TbBeach />,
-    description: "This property is close to the beach!",
+    img: "assets/room.jpg",
+    label: "Rooms",
+    icon: <MdOutlineBedroomParent />,
+    description: "This is for how wants rooms on rent or buy",
   },
   {
-    img: "assets/windmill_cat.webp",
-    label: "Windmills",
-    icon: <GiWindmill />,
-    description: "This property is has windmills!",
+    img: "assets/apartment.jpeg",
+    label: "Apartments",
+    icon: <MdApartment />,
+    description: "This property is has apartment!",
   },
   {
     img: "assets/modern_cat.webp",
-    label: "Iconic cities",
+    label: "Villa",
     icon: <MdOutlineVilla />,
     description: "This property is modern!",
   },
   {
-    img: "assets/countryside_cat.webp",
-    label: "Countryside",
-    icon: <TbMountain />,
-    description: "This property is in the countryside!",
+    img: "assets/home.jpg",
+    label: "House",
+    icon: <BsFillHouseHeartFill />,
+    description: "This property is in the Home!",
   },
   {
     img: "assets/pool_cat.jpg",
-    label: "Amazing Pools",
+    label: "Best Banglows",
     icon: <TbPool />,
-    description: "This is property has a beautiful pool!",
-  },
-  {
-    img: "assets/island_cat.webp",
-    label: "Islands",
-    icon: <GiIsland />,
-    description: "This property is on an island!",
-  },
-  {
-    img: "assets/lake_cat.webp",
-    label: "Lakefront",
-    icon: <GiBoatFishing />,
-    description: "This property is near a lake!",
-  },
-  {
-    img: "assets/skiing_cat.jpg",
-    label: "Ski-in/out",
-    icon: <FaSkiing />,
-    description: "This property has skiing activies!",
-  },
-  {
-    img: "assets/castle_cat.webp",
-    label: "Castles",
-    icon: <GiCastle />,
-    description: "This property is an ancient castle!",
-  },
-  {
-    img: "assets/cave_cat.jpg",
-    label: "Caves",
-    icon: <GiCaveEntrance />,
-    description: "This property is in a spooky cave!",
-  },
-  {
-    img: "assets/camping_cat.jpg",
-    label: "Camping",
-    icon: <GiForestCamp />,
-    description: "This property offers camping activities!",
-  },
-  {
-    img: "assets/arctic_cat.webp",
-    label: "Arctic",
-    icon: <BsSnow />,
-    description: "This property is in arctic environment!",
-  },
-  {
-    img: "assets/desert_cat.webp",
-    label: "Desert",
-    icon: <GiCactus />,
-    description: "This property is in the desert!",
-  },
-  {
-    img: "assets/barn_cat.jpg",
-    label: "Barns",
-    icon: <GiBarn />,
-    description: "This property is in a barn!",
-  },
-  {
-    img: "assets/lux_cat.jpg",
-    label: "Luxury",
-    icon: <IoDiamond />,
-    description: "This property is brand new and luxurious!",
-  },
+    description: "This is property has a Banglow!",
+  }
 ];
 
 export const types = [
   {
-    name: "An entire place",
-    description: "Guests have the whole place to themselves",
-    icon: <FaHouseUser />,
+    name: "Residential",
+    description: "Property will be provided to the residence only not for business",
   },
   {
-    name: "Room(s)",
+    name: "Commercial",
     description:
-      "Guests have their own room in a house, plus access to shared places",
-    icon: <BsFillDoorOpenFill />,
-  },
-  {
-    name: "A Shared Room",
-    description:
-      "Guests sleep in a room or common area that maybe shared with you or others",
-    icon: <FaPeopleRoof />,
-  },
+      "Property will be provided for business related things",
+  }
 ];
+export const buyOrSellData = [
+  {
+    name: "Rent",
+    description:
+      "Rent your property monthly or yearly rent",
+  },
+  {
+    name: "Sell",
+    description:
+      "Sell the property permanantly",
+  }
+]
 
 export const facilities = [
   {
@@ -167,36 +83,8 @@ export const facilities = [
     icon: <PiBathtubFill />,
   },
   {
-    name: "Personal care products",
-    icon: <FaPumpSoap />,
-  },
-  {
     name: "Outdoor shower",
     icon: <FaShower />,
-  },
-  {
-    name: "Washer",
-    icon: <BiSolidWasher />,
-  },
-  {
-    name: "Dryer",
-    icon: <BiSolidDryer />,
-  },
-  {
-    name: "Hangers",
-    icon: <PiCoatHangerFill />,
-  },
-  {
-    name: "Iron",
-    icon: <TbIroning3 />,
-  },
-  {
-    name: "TV",
-    icon: <PiTelevisionFill />,
-  },
-  {
-    name: "Dedicated workspace",
-    icon: <BsPersonWorkspace />
   },
   {
     name: "Air Conditioning",
@@ -207,67 +95,72 @@ export const facilities = [
     icon: <GiHeatHaze />,
   },
   {
-    name: "Security cameras",
-    icon: <GiCctvCamera />,
-  },
-  {
-    name: "Fire extinguisher",
-    icon: <FaFireExtinguisher />,
-  },
-  {
-    name: "First Aid",
-    icon: <BiSolidFirstAid />,
-  },
-  {
     name: "Wifi",
     icon: <BiWifi />,
-  },
+  }, 
   {
-    name: "Cooking set",
-    icon: <FaKitchenSet />,
-  },
-  {
-    name: "Refrigerator",
-    icon: <BiSolidFridge />,
-  },
-  {
-    name: "Microwave",
-    icon: <MdMicrowave />,
-  },
-  {
-    name: "Stove",
-    icon: <GiToaster />,
-  },
-  {
-    name: "Barbecue grill",
-    icon: <GiBarbecue />,
-  },
-  {
-    name: "Outdoor dining area",
-    icon: <FaUmbrellaBeach />,
-  },
-  {
-    name: "Private patio or Balcony",
+    name: "Balcony",
     icon: <MdBalcony />,
-  },
-  {
-    name: "Camp fire",
-    icon: <GiCampfire />,
   },
   {
     name: "Garden",
     icon: <MdYard />,
   },
   {
-    name: "Free parking",
+    name: "Parking",
     icon: <AiFillCar />,
+  }
+];
+
+export const faqForContact = [
+  {
+    indx: 1,
+    question: "What is Premium Chat?",
+    answer: "Premium Chat is a real-time communication feature allowing you to instantly reach property owners for immediate queries and information exchange."
   },
   {
-    name: "Self check-in",
-    icon: <FaKey />
+    indx: 2,
+    question: "Is my contact information secure?",
+    answer: "Yes, your information remains confidential and is only shared with the property owner through secured channels."
   },
   {
-    name: " Pet allowed",
-    icon: <MdPets />
+    indx: 3,
+    question: "Can I contact the owner if I'm not a premium member?",
+    answer: "Non-premium members can use the email or phone reveal options, with certain limitations on immediate chat availability."
+  },
+  {
+    indx: 4,
+    question: "What benefits do premium members receive?",
+    answer: "Premium members enjoy instant access to chat, priority response times, and exclusive property listings."
+  },
+  {
+    indx: 5,
+    question: "How do I upgrade to a premium membership?",
+    answer: "You can upgrade to a premium membership through your account settings or by visiting the subscription page on our website."
+  },
+  {
+    indx: 6,
+    question: "What if I have trouble contacting a property owner?",
+    answer: "If you're having trouble, please reach out to our support team, and we'll assist you in facilitating communication."
+  },
+  {
+    indx: 7,
+    question: "Can I save my favorite properties?",
+    answer: "Yes, you can save your favorite properties to your profile for easy access later."
+  },
+  {
+    indx: 8,
+    question: "How can I report inappropriate behavior?",
+    answer: "If you encounter any inappropriate behavior, please report it through our platform's reporting feature, and we will take appropriate action."
+  },
+  {
+    indx: 9,
+    question: "What should I do if I forget my password?",
+    answer: "If you forget your password, use the 'Forgot Password?' link on the login page to reset it."
+  },
+  {
+    indx: 10,
+    question: "Are there any fees associated with using the platform?",
+    answer: "While basic usage is free, certain premium features may incur fees. Please refer to our pricing page for detailed information."
   }
 ];

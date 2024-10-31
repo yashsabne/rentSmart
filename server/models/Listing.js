@@ -14,6 +14,10 @@ const ListingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    buyOrSell: {
+      type:String,
+      required:true
+    },
     streetAddress: {
       type: String,
       required: true,
@@ -26,24 +30,12 @@ const ListingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    province: {
-      type: String,
+    pincode: {
+      type: Number,
       required: true,
     },
     country: {
       type: String,
-      required: true,
-    },
-    guestCount: {
-      type: Number,
-      required: true,
-    },
-    bedroomCount: {
-      type: Number,
-      required: true,
-    },
-    bedCount: {
-      type: Number,
       required: true,
     },
     bathroomCount: {
@@ -74,8 +66,16 @@ const ListingSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+    },
+    paymentType: {
+      type:String,
+      required:false
+    },
+    promoted: {
+      type:Boolean,
+      default:false
     }
-  },
+  },  
   { timestamps: true}
 )
 

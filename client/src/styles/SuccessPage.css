@@ -1,0 +1,97 @@
+/* Dark theme background and text colors */
+/* body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+   */
+  .success-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: radial-gradient(circle, #1c1c1c, #111111);
+  }
+  
+  .success-container {
+    text-align: center;
+    padding: 40px;
+    border-radius: 15px;
+    background: #1e1e1e;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    width: 90%;
+  }
+  
+  .icon-container {
+    margin-bottom: 20px;
+  }
+  
+  .check-icon {
+    width: 80px;
+    height: 80px;
+    color: #4caf50;
+    animation: pop 0.5s ease;
+  }
+  
+  @keyframes pop {
+    0% {
+      transform: scale(0.7);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .success-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  
+  .success-message {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #c0c0c0;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .success-btn, .dashboard-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .success-btn {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .success-btn:hover {
+    background-color: #43a047;
+  }
+  
+  .dashboard-btn {
+    background-color: #1e88e5;
+    color: white;
+  }
+  
+  .dashboard-btn:hover {
+    background-color: #1976d2;
+  }
+  

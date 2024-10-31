@@ -24,10 +24,11 @@ router.post("/create", upload.array("listingPhotos"), async (req, res) => {
       creator,
       category,
       type,
+      buyOrSell,
       streetAddress,
       aptSuite,
       city,
-      province,
+      pincode,
       country,
       guestCount,
       bedroomCount,
@@ -39,6 +40,7 @@ router.post("/create", upload.array("listingPhotos"), async (req, res) => {
       highlight,
       highlightDesc,
       price,
+      paymentType
     } = req.body;
 
     const listingPhotos = req.files
@@ -53,10 +55,11 @@ router.post("/create", upload.array("listingPhotos"), async (req, res) => {
       creator,
       category,
       type,
+      buyOrSell,
       streetAddress,
       aptSuite,
       city,
-      province,
+      pincode,
       country,
       guestCount,
       bedroomCount,
@@ -69,6 +72,8 @@ router.post("/create", upload.array("listingPhotos"), async (req, res) => {
       highlight,
       highlightDesc,
       price,
+      paymentType
+      
     })
 
     await newListing.save()
@@ -99,22 +104,40 @@ router.get("/", async (req, res) => {
   }
 })
 
+ 
+router.get('/property-search', async (req, res) => {
+  try {
+    // Find all listings and sort by 'promoted' field, putting promoted listings at the top
+    const allListings = await Listing.find()
+      .populate('creator')
+      .sort({ promoted: -1 }); // Sort by 'promoted' in descending order
+
+    res.status(200).json(allListings); // Send sorted listings
+  } catch (err) {
+    console.error('Error fetching properties:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 /* GET LISTINGS BY SEARCH */
 router.get("/search/:search", async (req, res) => {
   const { search } = req.params
 
+ 
   try {
+
     let listings = []
 
     if (search === "all") {
-      listings = await Listing.find().populate("creator")
+      listings = await Listing.find().populate("creator").sort({ promoted: -1 })
     } else {
       listings = await Listing.find({
         $or: [
           { category: {$regex: search, $options: "i" } },
           { title: {$regex: search, $options: "i" } },
         ]
-      }).populate("creator")
+      }).populate("creator").sort({ promoted: -1 })
     }
 
     res.status(200).json(listings)
@@ -128,11 +151,33 @@ router.get("/search/:search", async (req, res) => {
 router.get("/:listingId", async (req, res) => {
   try {
     const { listingId } = req.params
+   
     const listing = await Listing.findById(listingId).populate("creator")
     res.status(202).json(listing)
   } catch (err) {
     res.status(404).json({ message: "Listing can not found!", error: err.message })
   }
 })
+ 
+router.delete('/:listingId', async (req, res) => {
+  try {
+    const { listingId } = req.params;
+    
+    console.log("the delete id is"+ listingId) 
+    const result = await Listing.findByIdAndDelete(listingId);
+    console.log(result)
+    
+    if (!result) {
+      return res.status(404).json({ message: "Property not found" });
+    }
 
-module.exports = router
+    res.status(200).json({ message: "Property deleted successfully" });
+  } catch (error) {
+    console.error("Delete property error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+module.exports = router;

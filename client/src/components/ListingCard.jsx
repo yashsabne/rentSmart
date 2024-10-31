@@ -1,31 +1,28 @@
-import { useState } from "react";
-import "../styles/ListingCard.scss";
+import { useState, useEffect } from "react";
+import "../styles/ListingCard.css";
 import {
   ArrowForwardIos,
   ArrowBackIosNew,
-  Favorite,
 } from "@mui/icons-material";
+import { MdWorkspacePremium } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { setWishList } from "../redux/state";
 
 const ListingCard = ({
   listingId,
-  creator,
   listingPhotoPaths,
   city,
-  province,
+  pincode,
   country,
   category,
   type,
+  buyOrSell,
   price,
-  startDate,
-  endDate,
-  totalPrice,
-  booking,
+  paymentType,
+  promoted
 }) => {
-  /* SLIDER FOR IMAGES */
   const [currentIndex, setCurrentIndex] = useState(0);
+
+
 
   const goToPrevSlide = () => {
     setCurrentIndex(
@@ -39,30 +36,12 @@ const ListingCard = ({
   };
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  /* ADD TO WISHLIST */
-  const user = useSelector((state) => state.user);
-  const wishList = user?.wishList || [];
+  const onlyOneImg = listingPhotoPaths.length === 1;
+  const hideButton = onlyOneImg ? { display: 'none' } : {};
 
-  const isLiked = wishList?.find((item) => item?._id === listingId);
-
-  const patchWishList = async () => {
-    if (user?._id !== creator._id) {
-    const response = await fetch(
-      `http://localhost:3001/users/${user?._id}/${listingId}`,
-      {
-        method: "PATCH",
-        header: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    dispatch(setWishList(data.wishList));
-  } else { return }
-  };
-
+  const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
+ 
   return (
     <div
       className="listing-card"
@@ -70,77 +49,66 @@ const ListingCard = ({
         navigate(`/properties/${listingId}`);
       }}
     >
-      <div className="slider-container">
+      <div className="slider-list-container">
         <div
-          className="slider"
+          className="slider-list"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {listingPhotoPaths?.map((photo, index) => (
-            <div key={index} className="slide">
+            <div key={index} className="slide-list">
+
+              {promoted && <span className="promoted-text">
+                <span className="promoted-text-tip" >promoted </span>
+                <MdWorkspacePremium />  </span>}
+
               <img
-                src={`http://localhost:3001/${photo?.replace("public", "")}`}
+               src={`${backendUrl}/${photo?.replace("public", "")}`}
+
                 alt={`photo ${index + 1}`}
               />
-              <div
-                className="prev-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToPrevSlide(e);
-                }}
-              >
-                <ArrowBackIosNew sx={{ fontSize: "15px" }} />
-              </div>
-              <div
-                className="next-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToNextSlide(e);
-                }}
-              >
-                <ArrowForwardIos sx={{ fontSize: "15px" }} />
-              </div>
             </div>
           ))}
         </div>
+
+        <div
+          className="prev-button" style={hideButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            goToPrevSlide(e);
+          }}
+        >
+          <ArrowBackIosNew sx={{ fontSize: "15px" }} />
+        </div>
+        <div
+          className="next-button" style={hideButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            goToNextSlide(e);
+          }}
+        >
+          <ArrowForwardIos sx={{ fontSize: "15px" }} />
+        </div>
       </div>
+      <div className="card-info">
 
-      <h3>
-        {city}, {province}, {country}
-      </h3>
-      <p>{category}</p>
 
-      {!booking ? (
-        <>
+        <div>
+
+          <h3>
+            {city}, {country}, - <span style={{ padding: 0, margin: 0, color: 'wheat', fontSize: 'medium' }}  > {pincode}</span>
+          </h3>
+          <p>{category}</p>
           <p>{type}</p>
+          <p> {buyOrSell}</p>
           <p>
-            <span>${price}</span> per night
-          </p>
-        </>
-      ) : (
-        <>
-          <p>
-            {startDate} - {endDate}
-          </p>
-          <p>
-            <span>${totalPrice}</span> total
-          </p>
-        </>
-      )}
+            <span>₹ {price}</span>
 
-      <button
-        className="favorite"
-        onClick={(e) => {
-          e.stopPropagation();
-          patchWishList();
-        }}
-        disabled={!user}
-      >
-        {isLiked ? (
-          <Favorite sx={{ color: "red" }} />
-        ) : (
-          <Favorite sx={{ color: "white" }} />
-        )}
-      </button>
+            <span style={{ color: 'white', fontSize: 'small', marginLeft: 2 }}>({paymentType}) </span>
+          </p>
+
+        </div>
+
+      </div>
     </div>
   );
 };

@@ -1,0 +1,111 @@
+.payment-container {
+    max-width: 800px;  
+    margin: 80px auto;
+    background-color: #ffffff;
+    color: #333333;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: relative; /* Allow positioning of absolute children */
+}
+
+.payment-container h1 {
+    font-size: 26px;
+    color: #222222;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.payment-container p {
+    font-size: 16px;
+    margin: 10px 0; 
+}
+.payment-container p span {
+    font-weight: 600;
+    color: #444;
+}
+.propertyOwnerInfo {
+    position: absolute;  
+    top: 60%;  
+    left: 50%;  
+    transform: translate(-50%, -100%); 
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 0; 
+    border-radius: 8px;
+    border-bottom: 4px solid #0066cc;
+    border-top: 4px solid #0066cc; 
+    z-index: 10; 
+    width: 35%; 
+    opacity: 0;
+}
+ 
+.propertyOwnerInfo p span {
+    color: #0066cc;
+}
+.print-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: black;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.print-button:hover {
+    background-color: #005bb5;
+}
+.btn-print-getback {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px; 
+}
+.box-canvas-container {
+    height: 400px;  
+    width: 100%;  
+}
+
+.box-canvas {
+    width: 100%;  
+    height: 100%;  
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .payment-container {
+        padding: 10px;
+        margin: 80px 20px 0 20px;
+    }
+
+    .payment-container h1 {
+        font-size: 20px;
+    }
+
+    .payment-container p {
+        font-size: 14px;
+    }
+
+    .btn-print-getback {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .print-button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .propertyOwnerInfo {
+        top: 40%;  
+        left: 50%;  
+        transform: translate(-50%, -50%);
+        width: 40%;
+        max-width: 280px;
+    }
+
+    .box-canvas-container {
+        height: 300px;
+    }
+}

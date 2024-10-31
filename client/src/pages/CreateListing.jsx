@@ -1,6 +1,6 @@
-import "../styles/CreateListing.scss";
+import "../styles/CreateListing.css";
 import Navbar from "../components/Navbar";
-import { categories, types, facilities } from "../data";
+import { categories, types, facilities, buyOrSellData } from "../data";
 
 import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
 import variables from "../styles/variables.scss";
@@ -13,33 +13,61 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer"
 
 const CreateListing = () => {
+
+
+  const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
+ 
+
+
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
-
-  /* LOCATION */
+  const [buyOrSell, setbuyOrSell] = useState("");
+ 
   const [formLocation, setFormLocation] = useState({
     streetAddress: "",
     aptSuite: "",
     city: "",
-    province: "",
-    country: "",
+    pincode: "",
+    country: "India",
   });
+
 
   const handleChangeLocation = (e) => {
     const { name, value } = e.target;
-    setFormLocation({
-      ...formLocation,
+    setFormLocation((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
+
+    if (name === "pincode" && value.length === 6) {   
+      fetchCityByPincode(value);
+    }
   };
 
-  /* BASIC COUNTS */
-  const [guestCount, setGuestCount] = useState(1);
-  const [bedroomCount, setBedroomCount] = useState(1);
-  const [bedCount, setBedCount] = useState(1);
-  const [bathroomCount, setBathroomCount] = useState(1);
+  const fetchCityByPincode = async (pincode) => {
+    try {
+      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await response.json();
 
-  /* AMENITIES */
+
+      console.log(data[0].PostOffice[0].Block)
+
+      if (data[0].Status === "Success" && data[0].PostOffice.length > 0) {
+        setFormLocation((prev) => ({
+          ...prev,
+          city: data[0].PostOffice[0].Block,   
+        }));
+      } else {
+        console.log("Invalid Pincode or No data found");
+      }
+    } catch (error) {
+      console.error("Error fetching city:", error);
+      alert("Failed to fetch city data.");
+    }
+  };
+
+  const [bathroomCount, setBathroomCount] = useState(0);
+ 
   const [amenities, setAmenities] = useState([]);
 
   const handleSelectAmenities = (facility) => {
@@ -51,8 +79,7 @@ const CreateListing = () => {
       setAmenities((prev) => [...prev, facility]);
     }
   };
-
-  /* UPLOAD, DRAG & DROP, REMOVE PHOTOS */
+ 
   const [photos, setPhotos] = useState([]);
 
   const handleUploadPhotos = (e) => {
@@ -75,14 +102,13 @@ const CreateListing = () => {
       prevPhotos.filter((_, index) => index !== indexToRemove)
     );
   };
-
-  /* DESCRIPTION */
+ 
   const [formDescription, setFormDescription] = useState({
     title: "",
     description: "",
     highlight: "",
     highlightDesc: "",
-    price: 0,
+    price: "",
   });
 
   const handleChangeDescription = (e) => {
@@ -100,8 +126,7 @@ const CreateListing = () => {
   const handlePost = async (e) => {
     e.preventDefault();
 
-    try {
-      /* Create a new FormData onject to handle file uploads */
+    try { 
       const listingForm = new FormData();
       listingForm.append("creator", creatorId);
       listingForm.append("category", category);
@@ -109,11 +134,8 @@ const CreateListing = () => {
       listingForm.append("streetAddress", formLocation.streetAddress);
       listingForm.append("aptSuite", formLocation.aptSuite);
       listingForm.append("city", formLocation.city);
-      listingForm.append("province", formLocation.province);
+      listingForm.append("pincode", formLocation.pincode);
       listingForm.append("country", formLocation.country);
-      listingForm.append("guestCount", guestCount);
-      listingForm.append("bedroomCount", bedroomCount);
-      listingForm.append("bedCount", bedCount);
       listingForm.append("bathroomCount", bathroomCount);
       listingForm.append("amenities", amenities);
       listingForm.append("title", formDescription.title);
@@ -121,20 +143,21 @@ const CreateListing = () => {
       listingForm.append("highlight", formDescription.highlight);
       listingForm.append("highlightDesc", formDescription.highlightDesc);
       listingForm.append("price", formDescription.price);
-
-      /* Append each selected photos to the FormData object */
+      listingForm.append("paymentType", formDescription.paymentType);
+      listingForm.append("buyOrSell",buyOrSell);
+       
       photos.forEach((photo) => {
         listingForm.append("listingPhotos", photo);
       });
-
-      /* Send a POST request to server */
-      const response = await fetch("http://localhost:3001/properties/create", {
+ 
+      const response = await fetch(`${backendUrl}/properties/create`, {
         method: "POST",
         body: listingForm,
       });
 
+
       if (response.ok) {
-        navigate("/");
+        navigate("/successfully-listed-property");
       }
     } catch (err) {
       console.log("Publish Listing failed", err.message);
@@ -154,9 +177,8 @@ const CreateListing = () => {
             <div className="category-list">
               {categories?.map((item, index) => (
                 <div
-                  className={`category ${
-                    category === item.label ? "selected" : ""
-                  }`}
+                  className={`category ${category === item.label ? "selected" : ""
+                    }`}
                   key={index}
                   onClick={() => setCategory(item.label)}
                 >
@@ -166,19 +188,33 @@ const CreateListing = () => {
               ))}
             </div>
 
-            <h3>What type of place will guests have?</h3>
+            <h3>What type of property and for what you have property</h3>
             <div className="type-list">
-              {types?.map((item, index) => (
+              {types?.map((item, i) => (
                 <div
                   className={`type ${type === item.name ? "selected" : ""}`}
-                  key={index}
+                  key={i}
                   onClick={() => setType(item.name)}
                 >
                   <div className="type_text">
                     <h4>{item.name}</h4>
                     <p>{item.description}</p>
                   </div>
-                  <div className="type_icon">{item.icon}</div>
+                </div>
+              ))}
+            </div>
+
+<div className="line-btwn-sellandtype"></div>
+            <div className="type-list">
+              {buyOrSellData?.map((bors, i) => (
+                <div
+                  className={`type ${buyOrSell === bors.name ? "selected" : ""}`}
+                  key={i}
+                  onClick={() => setbuyOrSell(bors.name)}>
+                  <div className="type_text">
+                    <h4>{bors.name}</h4>
+                    <p>{bors.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -210,6 +246,24 @@ const CreateListing = () => {
                   required
                 />
               </div>
+
+
+              <div className="location">
+                <p>pincode</p>
+                <input
+                  type="number"
+                  placeholder="pincode"
+                  name="pincode"
+                  value={formLocation.pincode}
+                  onChange={handleChangeLocation}
+                  required
+                />
+              </div>
+
+
+            </div>
+
+            <div className="half">
               <div className="location">
                 <p>City</p>
                 <input
@@ -217,20 +271,6 @@ const CreateListing = () => {
                   placeholder="City"
                   name="city"
                   value={formLocation.city}
-                  onChange={handleChangeLocation}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="half">
-              <div className="location">
-                <p>Province</p>
-                <input
-                  type="text"
-                  placeholder="Province"
-                  name="province"
-                  value={formLocation.province}
                   onChange={handleChangeLocation}
                   required
                 />
@@ -250,86 +290,6 @@ const CreateListing = () => {
 
             <h3>Share some basics about your place</h3>
             <div className="basics">
-              <div className="basic">
-                <p>Guests</p>
-                <div className="basic_count">
-                  <RemoveCircleOutline
-                    onClick={() => {
-                      guestCount > 1 && setGuestCount(guestCount - 1);
-                    }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
-                  />
-                  <p>{guestCount}</p>
-                  <AddCircleOutline
-                    onClick={() => {
-                      setGuestCount(guestCount + 1);
-                    }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="basic">
-                <p>Bedrooms</p>
-                <div className="basic_count">
-                  <RemoveCircleOutline
-                    onClick={() => {
-                      bedroomCount > 1 && setBedroomCount(bedroomCount - 1);
-                    }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
-                  />
-                  <p>{bedroomCount}</p>
-                  <AddCircleOutline
-                    onClick={() => {
-                      setBedroomCount(bedroomCount + 1);
-                    }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="basic">
-                <p>Beds</p>
-                <div className="basic_count">
-                  <RemoveCircleOutline
-                    onClick={() => {
-                      bedCount > 1 && setBedCount(bedCount - 1);
-                    }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
-                  />
-                  <p>{bedCount}</p>
-                  <AddCircleOutline
-                    onClick={() => {
-                      setBedCount(bedCount + 1);
-                    }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
-                  />
-                </div>
-              </div>
 
               <div className="basic">
                 <p>Bathrooms</p>
@@ -368,9 +328,8 @@ const CreateListing = () => {
             <div className="amenities">
               {facilities?.map((item, index) => (
                 <div
-                  className={`facility ${
-                    amenities.includes(item.name) ? "selected" : ""
-                  }`}
+                  className={`facility ${amenities.includes(item.name) ? "selected" : ""
+                    }`}
                   key={index}
                   onClick={() => handleSelectAmenities(item.name)}
                 >
@@ -471,15 +430,16 @@ const CreateListing = () => {
                 onChange={handleChangeDescription}
                 required
               />
+
               <p>Description</p>
               <textarea
-                type="text"
                 placeholder="Description"
                 name="description"
                 value={formDescription.description}
                 onChange={handleChangeDescription}
                 required
               />
+
               <p>Highlight</p>
               <input
                 type="text"
@@ -489,27 +449,51 @@ const CreateListing = () => {
                 onChange={handleChangeDescription}
                 required
               />
+
               <p>Highlight details</p>
               <textarea
-                type="text"
                 placeholder="Highlight details"
                 name="highlightDesc"
                 value={formDescription.highlightDesc}
                 onChange={handleChangeDescription}
                 required
               />
-              <p>Now, set your PRICE</p>
-              <span>$</span>
+
+              <div className="price-payment"> 
+
+                <div className="price pay-price-flex">
+              <p>Now, set your PRICE (₹)</p>
+           
               <input
                 type="number"
-                placeholder="100"
+                placeholder="INR 102442"
                 name="price"
                 value={formDescription.price}
                 onChange={handleChangeDescription}
                 className="price"
                 required
               />
+              </div>
+
+              <div className="pay-method pay-price-flex">
+              <p>Payment Type:</p>
+              <select
+                name="paymentType"
+                value={formDescription.paymentType}
+                onChange={handleChangeDescription} className="select-container"
+                required
+              >
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="halfyearly">Half yearly</option>
+                <option value="once">Once</option>
+              </select>
+              </div>
+
+              </div>
+
             </div>
+
           </div>
 
           <button className="submit_btn" type="submit">
@@ -523,4 +507,4 @@ const CreateListing = () => {
   );
 };
 
-export default CreateListing;
+export default CreateListing;  

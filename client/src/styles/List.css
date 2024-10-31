@@ -1,0 +1,15 @@
+ 
+.title-list {
+  margin: 100px auto;
+  color: blueviolet;
+  
+ 
+}
+.list {
+  padding: 0 100px 120px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+ 
+}

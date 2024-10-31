@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose") ;
 
 const UserSchema = new mongoose.Schema(
   {
@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    phone: {
+      type: Number,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
@@ -23,21 +27,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    tripList: {
-      type: Array,
-      default: [],
-    },
-    wishList: {
-      type: Array,
-      default: [],
-    },
-    propertyList: {
-      type: Array,
-      default: [],
-    },
-    reservationList: {
-      type: Array,
-      default: [],
+    propertyList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",   
+      },
+    ],
+    savedProperties: {
+      type:Array,
+      default:[]
     }
   },
   { timestamps: true }

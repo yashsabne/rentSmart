@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/List.scss";
+import "../styles/List.css";
 import Navbar from "../components/Navbar";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,6 +7,9 @@ import { setListings } from "../redux/state";
 import Loader from "../components/Loader";
 import ListingCard from "../components/ListingCard";
 import Footer from "../components/Footer"
+
+const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
+ 
 
 const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
@@ -18,7 +21,7 @@ const CategoryPage = () => {
   const getFeedListings = async () => {
     try {
       const response = await fetch(
-          `http://localhost:3001/properties?category=${category}`,
+          `${backendUrl}/properties?category=${category}`,
         {
           method: "GET",
         }
@@ -43,30 +46,39 @@ const CategoryPage = () => {
       <Navbar />
       <h1 className="title-list">{category} listings</h1>
       <div className="list">
-        {listings?.map(
+      {listings?.map(
           ({
             _id,
             creator,
             listingPhotoPaths,
             city,
-            province,
+            pincode,
             country,
             category,
             type,
             price,
-            booking = false,
+            paymentType,
+            title,
+            description,
+            highlight,
+            highlightDesc
           }) => (
             <ListingCard
+              key={_id}
               listingId={_id}
-              creator={creator}
+              creatorName={`${creator.firstName} ${creator.lastName}`}
               listingPhotoPaths={listingPhotoPaths}
               city={city}
-              province={province}
+              pincode={pincode}
               country={country}
               category={category}
               type={type}
               price={price}
-              booking={booking}
+              paymentType={paymentType}
+              title={title}
+              description={description}
+              highlight={highlight}
+              highlightDesc={highlightDesc}
             />
           )
         )}

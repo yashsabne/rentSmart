@@ -1,0 +1,83 @@
+.register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1c1c1e;
+}
+
+.register_content {
+  background-color: #2b2b2e;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.register_content_form input,
+.otp_form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background-color: #3a3a3d;
+  color: #fff;
+  font-size: 14px;
+}
+
+.register_content_form input:focus,
+.otp_form input:focus {
+  outline: 2px solid #555;
+}
+
+.register_content_form label,
+.otp_form h3 {
+  display: block;
+  margin: 15px 0;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+}
+
+.register_content_form button,
+.otp_form button {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background-color: #4b4bff;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.register_content_form button:disabled,
+.otp_form button:disabled {
+  background-color: #888;
+}
+
+.register_content_form button:hover:not(:disabled),
+.otp_form button:hover:not(:disabled) {
+  background-color: #3333ff;
+}
+
+.register_content a {
+  display: block;
+  color: #bbb;
+  text-decoration: none;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.register_content a:hover {
+  color: #fff;
+}
+
+.uploadImg {
+  height: 100px;
+  width: 100px;
+}
