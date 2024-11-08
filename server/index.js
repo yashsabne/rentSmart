@@ -8,6 +8,9 @@ const authRoutes = require("./routes/auth.js");
 const listingRoutes = require("./routes/listing.js");
 const userRoutes = require("./routes/user.js"); 
 const razorpaymentOption = require('./routes/razorpayment.js')
+// const passport = require('passport');
+ 
+
 
 const app = express();
  
@@ -19,17 +22,22 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static("public"));  
  
-
-
-// Set up session
 app.use(session({
-  secret: 'yourhuhhhohSecretfkfjsofkjsfiKey',
+  secret: 'hsfbgshdfbsdfbshdhfsdhbfhfbsdsfbsdfbdsfbdsfbdsjfbdfbdfbdjfbdjfbdbf',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 300000 },
-  secure: false,  
-  sameSite: 'none'  
 }));
+
+// Initialize passport and session
+// app.use(passport.initialize());
+// app.use(passport.session());
+
+// app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// app.get('/auth/google/callback', passport.authenticate('google', {
+//   successRedirect: 'http://localhost:3000/dashboard',
+//   failureRedirect: '/',
+// }));
 
  
  
@@ -41,7 +49,9 @@ app.use('/payment',razorpaymentOption)
 const server = http.createServer(app);  
  
 const PORT = process.env.PORT || 3001;
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017', {
+ 
+
+mongoose.connect(process.env.MONGO_URI  || 'mongodb://localhost:27017',   { //'mongodb://localhost:27017',
   dbName: "Dream_Nest"
   })
   .then(() => {

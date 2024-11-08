@@ -1,0 +1,76 @@
+/* HelpInfoPage.css */
+
+body {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    font-family: 'Arial', sans-serif;
+}
+
+.page-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #262626;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.main-heading {
+    font-size: 2.5rem;
+    color: #ffab00;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.help-section, .info-section {
+    margin-top: 2rem;
+}
+
+.help-content {
+    font-size: 1.2rem;
+    color: #d0d0d0;
+    line-height: 1.7;
+    text-align: justify;
+    margin-bottom: 2rem;
+}
+
+.help-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #333333;
+    border-radius: 6px;
+}
+
+.help-title {
+    font-size: 1.4rem;
+    color: #ffb74d;
+    margin-bottom: 0.5rem;
+}
+
+.help-description {
+    font-size: 1rem;
+    color: #cccccc;
+    line-height: 1.6;
+}
+
+.sub-heading {
+    font-size: 2rem;
+    color: #ff9800;
+    margin-top: 1.5rem;
+}
+
+.info-content, .feature-content {
+    font-size: 1.1rem;
+    color: #cfcfcf;
+    background-color: #303030;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+
+.feature-heading {
+    font-size: 1.3rem;
+    color: #ff9800;
+    margin-top: 1rem;
+}
+   

@@ -14,24 +14,50 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 
 });
+ 
 
-router.post('/create-order', async (req, res) => {
-    const { amount } = req.body;
-    const options = {
-        amount: amount * 100, 
-        currency: "INR",
-    };
-    try {
-        const order = await razorpay.orders.create(options);
-        res.json({ orderId: order.id });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to create order' });
+// Route to create an order
+router.post('/create-order/:userIdSender', async (req, res) => {
+  const { amount } = req.body;
+  const { userIdSender } = req.params;
+
+  try {
+    // Find the user
+    const user = await User.findById(userIdSender);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
+
+    const isPremiumMember = user.premiumMember;
+
+    if (!isPremiumMember) {
+      if (user.hasReachedContactRevealLimit()) {
+        return res.status(403).json({ message: "Contact reveal limit reached. Please upgrade to premium or try after a month." });
+      }
+    }
+
+    // Set up order options for Razorpay
+    const options = {
+      amount: amount * 100, // Amount in paise
+      currency: "INR",
+    };
+
+    // Create the order with Razorpay
+    const order = await razorpay.orders.create(options);
+    res.json({ orderId: order.id });
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to create order" });
+  }
 });
+
+
 
 router.post('/successful-payment/:orderId/:signature',async (req, res) => {
     const { orderId, signature } = req.params;
     const { propertyId, userId } = req.query;
+
+    
 
     const property = await Listing.findById(propertyId).populate("creator");
 
@@ -93,10 +119,23 @@ router.post('/successful-payment/:orderId/:signature',async (req, res) => {
             </div>
         </div>`};
   
+
+        if (!user.premiumMember) {
+          try {
+            await user.incrementNumberReveal();
+          } catch (error) {
+            if (error.message === "Contact reveal limit reached.") {
+              return res.status(403).json({ error: "Contact reveal limit reached." });
+            }
+            throw error;
+          }
+        }
+
       await transporter.sendMail(mailOptions); 
 
     try {
         // Save payment data to the database
+
         const payment = new Payment({
             orderId,
             signature,
@@ -262,7 +301,7 @@ router.post('/create-order/:listingId', async (req, res) => {
           <h2>Property Promotion Successful</h2>
           <p>Dear ${user.firstName},</p>
           <p>Your property has been successfully promoted on our platform. Here are the details:</p>
-          
+    
           <ul>
             <li><strong>Property ID:</strong> ${listingId}</li>
             <li><strong>Promotion Start Date:</strong> ${promotedDate.toDateString()}</li>
@@ -293,24 +332,20 @@ router.post('/create-order/:listingId', async (req, res) => {
   
 
   const cron = require('node-cron'); 
-
-// Schedule job to run every day at midnight
+ 
 cron.schedule('0 0 * * *', async () => {
   const now = new Date();
 
-  try {
-    // Find promotions that have expired
+  try { 
     const expiredPromotions = await PromotedProperty.find({
       expiryDate: { $lte: now },
       isExpired: false,
     });
-
-    // Update each expired promotion
+ 
     for (const promotion of expiredPromotions) {
       promotion.isExpired = true;
       await promotion.save();
-
-      // Find the related listing and set promoted to false
+ 
       await Listing.updateOne(
         { _id: promotion.listingId },
         { $set: { promoted: false } }

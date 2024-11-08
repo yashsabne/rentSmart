@@ -13,6 +13,9 @@ const ContactPropertyOwner = () => {
     const [propertyId, setPropertyId] = useState('');
     const [userIdSender, setUserIdSender] = useState('');
     const location = useLocation();
+    const [message, setmessage] = useState(""); 
+    const [modalMessage, setModalMessage] = useState("");
+
 
     const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
     const razorpay_key = process.env.REACT_APP_RAZORPAY_KEY;
@@ -66,10 +69,17 @@ const ContactPropertyOwner = () => {
                 body: JSON.stringify(requestData),
             });
 
+            const result = await response.json();   
+
             if (response.ok) {
-                setIsModalOpen(false);
+                setModalMessage("Email sent successfully!");
+                setTimeout(() => {
+                    setIsModalOpen(false); 
+                }, 2000);
+
+                 
             } else {
-                console.error('Failed to send email');
+                setModalMessage(result.message || "Failed to send email");   
             }
         } catch (error) {
             console.error('Error sending email:', error);
@@ -78,18 +88,23 @@ const ContactPropertyOwner = () => {
 
     const onRevealNumberClick = async () => {
         const revealButton = document.querySelector('.reveal-button');
-        revealButton.innerHTML = 'Loading the payment page';
+        revealButton.innerHTML = 'Loading the payment page...';
     
         try {  
-            const orderResponse = await fetch(`${backendUrl}/payment/create-order`, {
+            const orderResponse = await fetch(`${backendUrl}/payment/create-order/${userIdSender}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ amount: 100 }), 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: 100 }), // Set your amount here
             });
             
             const data = await orderResponse.json();
+            
+            if (!data.orderId) {
+                revealButton.innerHTML = 'Reveal Phone Number';
+                setmessage("Failed to initiate payment. Please try again after month. because you reached your free access kindly upgrade account to premium")
+                return  
+            }
+    
             const options = {
                 key: razorpay_key, 
                 amount: 100 * 100,
@@ -98,45 +113,52 @@ const ContactPropertyOwner = () => {
                 description: 'Reveal Phone Number',
                 order_id: data.orderId,
                 handler: async function (paymentResponse) {   
-                    console.log("Payment Successful", paymentResponse); 
+                    console.log("Payment Successful:", paymentResponse); 
+                    
+                    revealButton.innerHTML = 'Finalizing... Please stay on this page';
                     try {
                         const response = await fetch(`${backendUrl}/payment/successful-payment/${paymentResponse.razorpay_order_id}/${paymentResponse.razorpay_signature}?propertyId=${propertyId}&userId=${userIdSender}&status=true`, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ propertyId }),
                         });
     
                         if (response.ok) {
-                            const data = await response.json();
-                            console.log("Payment details saved:", data);
+                            const result = await response.json();
+                            console.log("Payment details saved:", result);
+                            window.location.href = `/payment/details?orderId=${paymentResponse.razorpay_order_id}`;
                         } else {
                             console.error("Failed to save payment data:", await response.text());
+                            alert("Payment successful, but there was an issue saving the details. Please contact support.");
                         }
                     } catch (error) {
                         console.error("Error sending payment success data:", error);
+                        alert("Payment successful, but an error occurred. Please contact support.");
                     }
-    
-                    window.location.href = `/payment/details?orderId=${paymentResponse.razorpay_order_id}`;
                 },
-                theme: {
-                    color: '#3399cc',
-                },
+                theme: { color: '#3399cc' },
                 modal: {
                     ondismiss: function() {
                         revealButton.innerHTML = 'Reveal Phone Number';
+                        alert("Payment process was interrupted. Please try again.");
                     }
                 }
-            };  
+            };
+            
             const rzp = new window.Razorpay(options);
             rzp.open();
-            revealButton.innerHTML = 'Kindly Complete Payment...if done please stay on the page do not refresh it make take some time';
+            
+            revealButton.innerHTML = 'Kindly complete the payment... Do not refresh the page.';
         } catch (error) {
             console.error('Error initiating payment:', error);
             revealButton.innerHTML = 'Reveal Phone Number';
+            alert("Error initiating payment. Please try again.");
         }
     };
+
+    
+
+ 
 
     return (
         <div className="contact-owner-page">
@@ -158,9 +180,11 @@ const ContactPropertyOwner = () => {
                         <div className="icon">&#128172;</div>
                         <h3>Premium Chat Access</h3>
                         <p>Instantly reach property owners through our exclusive chat feature for real-time conversations.</p>
-                        <a href="/chat-with-owner" className='a_contact'>
-                            <button className="contact-button premium-button">Start Chat</button>
+                        <a className='a_contact'> {/* href="/chat-with-owner" */}
+                            <button className="contact-button premium-button" style={{cursor:'not-allowed'}}>Start Chat</button>
                         </a>
+                        <small>Temporary not available</small>
+
                     </div>
 
                     <div className="contact-option-card">
@@ -176,9 +200,12 @@ const ContactPropertyOwner = () => {
                         <div className="icon">&#128241;</div>
                         <h3>Reveal Phone Number</h3>
                         <p>Prefer a direct conversation? Reveal the owner's number to discuss all key details directly.</p>
+
                         <a className='a_contact'>
                             <button className="contact-button reveal-button" onClick={onRevealNumberClick}>   Reveal Number</button>
                         </a>
+                        {message && <p className="error-message">{message}</p>}
+
                     </div>
                 </div>
             </section>
@@ -195,12 +222,15 @@ const ContactPropertyOwner = () => {
                 </div>
             </section>
 
+
+
             <EmailModal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
                 onSendEmail={handleSendEmail}
                 senderEmail={senderEmail}   
                 receiverEmail={receiverEmail} 
+                message={modalMessage} 
             />
             <Footer />
         </div>

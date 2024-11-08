@@ -66,13 +66,17 @@
     background-color: #4CAF50; /* Green */
     color: white;
 }
+.button-div {
+    display: flex;
+    justify-content: end;
+}
 .button-close {
     background-color: transparent;
     font-size: large;
     color: red;
     border: none;
     cursor: pointer;
-    position: relative;
+  
 }
 
 .button-close:hover~.disapper_modal {

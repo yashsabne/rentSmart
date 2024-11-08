@@ -14,18 +14,18 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [recentActivities, setRecentActivities] = useState([]);
   const [savedProperties, setSavedProperties] = useState([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); 
-  const [showClearModal, setShowClearModal] = useState(false);  
-  const [propertyToDelete, setPropertyToDelete] = useState(null);  
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [propertyToDelete, setPropertyToDelete] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(10); 
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [premiumMemberStatus, setpremiumMemberStatus] = useState(false);
 
   const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
- 
 
- 
+
   const showMorePayments = () => {
-    setVisibleCount((prevCount) => prevCount + 10); 
+    setVisibleCount((prevCount) => prevCount + 10);
   };
 
   const user = useSelector((state) => state.user);
@@ -73,7 +73,7 @@ const Dashboard = () => {
         method: "DELETE",
       });
 
-      if (response.ok) { 
+      if (response.ok) {
         setSavedProperties(savedProperties.filter((property) => property._id !== propertyToDelete));
         setShowDeleteModal(false); // Close the modal
         console.log("Property deleted successfully");
@@ -91,16 +91,14 @@ const Dashboard = () => {
       await fetch(`${backendUrl}/users/${userId}/recent-activities-delete`, {
         method: "DELETE",
       });
-      setRecentActivities([]);  
-      setShowClearModal(false);  
+      setRecentActivities([]);
+      setShowClearModal(false);
     } catch (error) {
       console.log("Failed to delete recent activities", error.message);
     }
   };
 
   const getPaymentHist = async () => {
-
-
     try {
       const response = await fetch(`${backendUrl}/payment/get-payment-histroy/${userId}`);
       const data = await response.json();
@@ -109,7 +107,7 @@ const Dashboard = () => {
     } catch (err) {
       console.log("Fetch recent payment history failed", err.message);
     }
-  }; 
+  };
   const confirmDeleteProperty = (propertyId) => {
     setPropertyToDelete(propertyId);
     setShowDeleteModal(true);
@@ -119,12 +117,25 @@ const Dashboard = () => {
     setShowClearModal(true);
   };
 
+  const getPremiumUser = async () => {
+    if (!user || !user._id) return;
+
+    try {
+      const response = await fetch(`${backendUrl}/users/checkingForPremium-user/${userId}`);
+      const data = await response.json();
+      setpremiumMemberStatus(data.premiumStatus);
+    } catch (err) {
+      console.log("Fetch recent activities failed", err.message);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       getPropertyList();
       getRecentActivities();
       getSavedProperties();
       getPaymentHist();
+      getPremiumUser();
     }
   }, [user]);
 
@@ -133,25 +144,64 @@ const Dashboard = () => {
   ) : (
     <>
       <Navbar />
-      <div className="dashboard-container"> 
-        <div className="dashboard-user-info">
-          {user && user.profileImagePath ? (
-            <img
-              src={`${backendUrl}/` + user.profileImagePath.replace("public", "")}
-              alt="User Profile"
-              className="dashboard-profile-photo"
-            />
-          ) : (
-            <p>No profile photo available</p>
-          )}
-          <div className="user-info-text">
-            <h2>{user?.firstName ? `${user.firstName} ${user.lastName}` : "Username"}</h2>
-            <p>Email: {user?.email || "user@example.com"}</p>
-            <p>Phone: {user?.phone || "45646544554"}</p>
-            <small>UserId: {user?._id || "*****"}</small>
+      <div className="dashboard-container">
+
+        <div style={{ display: 'flex', justifyContent: 'center' }} >
+
+          <div className="dashboard-user-info">
+
+            <div className="premium-dashboard-userInfo">
+
+              {user && user.profileImagePath ? (
+                <img
+                  src={`${backendUrl}/` + user.profileImagePath.replace("public", "")}
+                  alt="User Profile"
+                  className="dashboard-profile-photo"
+                  style={{borderColor:premiumMemberStatus?'gold':'white'}}
+                />
+              ) : (
+                <p>No profile photo available</p>
+              )}
+              <div className="user-info-text">
+                <h2>{user?.firstName ? `${user.firstName} ${user.lastName}` : "Username"}</h2>
+                <p>Email: {user?.email || "user@example.com"}</p>
+                <p>Phone: {user?.phone || "45646544554"}</p>
+                <small>UserId: {user?._id || "*****"}</small>
+              </div>
+            </div>
+
+
+            {premiumMemberStatus ? (
+              <a
+                href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
+                style={{ color: 'white' }}
+                className="premium-text-link"
+              >
+                <div className="premium-link">
+              
+                </div>
+              </a>
+            ) : (
+              <a
+                href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
+                style={{ color: 'white' }}
+                className="become-premium-link"
+              >
+                <div className="premium-link-a">
+                  Become Premium
+                </div>
+              </a>
+            )}
+
+
+
+
+
+
           </div>
         </div>
- 
+
+
         <div className="dashboard-property-section">
           <h1 style={{ display: 'flex', alignItems: "center", height: '60px' }}>
             Your Listed Properties
@@ -190,7 +240,7 @@ const Dashboard = () => {
                     buyOrSell={buyOrSell}
                     price={price}
                     paymentType={paymentType}
-                    promoted = {promoted}
+                    promoted={promoted}
                   />
                 )
               )
@@ -199,7 +249,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
- 
+
         <div className="dashboard-saved-section">
           <h1>Saved for Later</h1>
           <div className="dashboard-saved-list">
@@ -214,7 +264,7 @@ const Dashboard = () => {
                   category,
                   type,
                   price,
-                  paymentType, 
+                  paymentType,
                 }) => (
                   <SaveForLaterListingCard
                     key={_id}
@@ -236,7 +286,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
- 
+
         <div className="dashboard-activities-section">
           <h2 className="email_sent_his">
             Email Sent History
@@ -265,7 +315,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="dashboard-activities-section">
+          <div className="dashboard-activities-section">
           <h1>Payment history of contact reveal </h1>
           {paymentHistory.length > 0 ? (
             paymentHistory.slice(0, visibleCount).map((payment, index) => (
@@ -294,19 +344,19 @@ const Dashboard = () => {
           )}
         </div>
       </div>
- 
+
       <CustomModal
         show={showDeleteModal}
         handleClose={() => setShowDeleteModal(false)} // Close modal without deleting
         handleDelete={handleDeleteSavedProperty} // Delete property
         message="Are you sure you want to delete this saved property?" // Example confirmation message
       />
-      
+
       <CustomModal
         show={showClearModal}
-        handleClose={() => setShowClearModal(false)}  
-        handleDelete={handleDeleteRecentActivities} 
-        message="Are you sure you want to clear your recent activities?"  
+        handleClose={() => setShowClearModal(false)}
+        handleDelete={handleDeleteRecentActivities}
+        message="Are you sure you want to clear your recent activities?"
       />
 
       <Footer />

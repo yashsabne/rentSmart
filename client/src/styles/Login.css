@@ -53,6 +53,7 @@
 }
 
 .google-login {
+  position: relative;
   background-color: #db4437;
   color: white;
   display: flex;
@@ -60,7 +61,7 @@
   justify-content: center;
   padding: 10px;
   border-radius: 8px;
-  cursor: pointer;
+  cursor: not-allowed;
   margin: 10px 0;
 }
 
@@ -68,14 +69,25 @@
   width: 20px;
   margin-right: 10px;
 }
-
-.google-login:hover {
-  background-color: #c03524;
+.google-prob {
+  display: none;
+  padding: 8px;
+  background-color: #4b4bff;
+  color: white;
+  border-radius: 4px;
+  margin-top: 5px;
+  font-size: 12px;
+  position: absolute;
+  z-index: 10;
+}
+.google-login:hover .google-prob {
+  display: block;
 }
 
 .login-links {
   margin: 15px 0;
 }
+
 
 .login-links a {
   display: block;
@@ -87,4 +99,10 @@
 
 .login-links a:hover {
   color: #fff;
+}
+
+.error-message {
+  background-color: #db4437;
+  padding: 10px 30px 10px 30px;
+  border-radius: 10px;
 }

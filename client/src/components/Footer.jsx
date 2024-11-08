@@ -23,8 +23,10 @@ const Footer = () => {
           <Email />
           <p>yashsabne39@gmail.com</p>
         </div>
-        <img src="/assets/payment.png" alt="payment" />
+        <a href="/help" style={{color:'yellow',textDecoration:'none'}} > <div> 😊 info about project </div></a>     
+   
       </div>
+   
       </div>
 
       <div className="footer_bottom">

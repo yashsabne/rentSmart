@@ -52,7 +52,7 @@ const ListingDetails = () => {
       try {
         await fetch(`${backendUrl}/properties/${listingId}`, { method: "DELETE" });
         alert("Property deleted successfully.");
-        navigate("/"); // Redirect to homepage after deletion
+        navigate("/dashboard"); 
       } catch (err) {
         console.log("Delete Property Failed", err.message);
       }
@@ -102,9 +102,9 @@ const ListingDetails = () => {
   
       const options = {
         key: razorpay_key,
-        amount: amount.toString(),
+        amount: amount,
         currency: currency,
-        name: 'Promote Property',
+        name: 'Promote Property - RentSmart',
         description: 'Payment to promote property',
         order_id: orderId,
         handler: async (paymentResponse) => {
@@ -115,6 +115,7 @@ const ListingDetails = () => {
   
       const rzp = new window.Razorpay(options);
       rzp.open();
+      
     } catch (error) {
       console.log(error);
     }

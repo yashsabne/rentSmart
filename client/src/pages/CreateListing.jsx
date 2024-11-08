@@ -2,8 +2,7 @@ import "../styles/CreateListing.css";
 import Navbar from "../components/Navbar";
 import { categories, types, facilities, buyOrSellData } from "../data";
 
-import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
-import variables from "../styles/variables.scss";
+import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material"; 
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { IoIosImages } from "react-icons/io";
 import { useState } from "react";
@@ -16,9 +15,9 @@ const CreateListing = () => {
 
 
   const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
- 
 
 
+  const [message, setmessage] = useState("");
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
   const [buyOrSell, setbuyOrSell] = useState("");
@@ -62,8 +61,9 @@ const CreateListing = () => {
       }
     } catch (error) {
       console.error("Error fetching city:", error);
-      alert("Failed to fetch city data.");
-    }
+      // alert("Failed to fetch city data.");
+      setmessage("you are offline so failed to fetch city data.")
+    }  
   };
 
   const [bathroomCount, setBathroomCount] = useState(0);
@@ -260,6 +260,8 @@ const CreateListing = () => {
                 />
               </div>
 
+              {message &&  <p> {message}</p>}
+
 
             </div>
 
@@ -298,22 +300,14 @@ const CreateListing = () => {
                     onClick={() => {
                       bathroomCount > 1 && setBathroomCount(bathroomCount - 1);
                     }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
+                  
                   />
                   <p>{bathroomCount}</p>
                   <AddCircleOutline
                     onClick={() => {
                       setBathroomCount(bathroomCount + 1);
                     }}
-                    sx={{
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      "&:hover": { color: variables.pinkred },
-                    }}
+                  
                   />
                 </div>
               </div>

@@ -1,5 +1,4 @@
-import { useParams } from "react-router-dom";
-import "../styles/List.css"
+import { useParams } from "react-router-dom"; 
 import { useSelector,useDispatch  } from "react-redux";
 import { setListings } from "../redux/state";
 import { useEffect, useState } from "react";
@@ -39,7 +38,9 @@ const SearchPage = () => {
   return loading ? <Loader /> : (
     <>
       <Navbar getSearchListings={getSearchListings} />
-      <h1 className="title-list">{search}</h1>
+      <h1 className="title-list" style={{marginTop:'90px', textAlign:'center'}} >{search.toUpperCase()}</h1>
+
+
       <div className="list">
         {listings?.map(
           ({

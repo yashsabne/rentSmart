@@ -13,35 +13,7 @@ const Slide = () => {
   const user = useSelector((state) => state.user);
   const userName = user?.firstName || "Guest";
 
-  // GSAP Animation for heading
-  useEffect(() => {
-    const tl = gsap.timeline();
-
-    tl.fromTo(
-      ".slide-heading",
-      {
-        opacity: 0,
-        z: 0,
-      },
-      {
-        opacity: 1,
-        y: 50,
-        ease: "bounce.out",
-        duration: 2,
-      }
-    )
-      .to(".slide-heading", {
-        opacity: 1,  // Keep fully visible
-        duration: 1, // Hold the visibility for 1 second
-      })
-      .to(".slide-heading", {
-        opacity: 0,  // Fade out
-        y: -100,      // Move upward out of view
-        ease: "power2.in", // Ease for upward movement
-        duration: 1.5, // Duration of the fade-out and upward movement
-      });
-  }, []);
-
+ 
 
   return (
     <div className="slide">
@@ -67,13 +39,7 @@ const Slide = () => {
 
       {/* Content Section */}
       <div className="content">
-        <div className="welcome-section">
-          <h1 className="slide-heading">
-            Welcome, {userName}!
-            <br />
-            Thank you for choosing RentSmart!
-          </h1>
-        </div>
+       
 
         <div className="info-section">
           <p className="slide-info">

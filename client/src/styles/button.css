@@ -63,8 +63,7 @@
     opacity: 0;
   }
 }
-
-/* Hover effect */
+ 
 .btn:hover {
   background-color: #333;
 }

@@ -22,9 +22,14 @@ export const userSlice = createSlice({
     }, 
     setPropertyList: (state, action) => {
       state.user.propertyList = action.payload
-    }
+    },
+    setUserPremium: (state, action) => {
+      if (state.user) {
+        state.user.premiumMember = action.payload; // independently update premium status
+      }
+    } 
   }
 })
 
-export const { setLogin, setLogout, setListings, setTripList, setWishList, setPropertyList, setReservationList } = userSlice.actions
+export const { setLogin, setLogout, setListings, setPropertyList,setUserPremium } = userSlice.actions
 export default userSlice.reducer

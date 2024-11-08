@@ -1,0 +1,69 @@
+.reset-forgot-password-page {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .reset-forgot-password-page h2,  .reset-info-page { 
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .reset-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .reset-form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+  
+  .reset-form-input :focus {
+    border-color: #4b4bff;
+    outline: none;
+  }
+  
+  .reset-form-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4b4bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .reset-form-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  
+  .reset-form-btn:hover:not(:disabled) {
+    background-color: #3737d6;
+  }
+  
+  .reset-success-message {
+    color: #28a745;
+    font-size: 14px;
+    margin-top: 15px;
+  }
+  
+  .reset-error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 15px;
+  }

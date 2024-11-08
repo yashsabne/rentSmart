@@ -164,3 +164,42 @@ export const faqForContact = [
     answer: "While basic usage is free, certain premium features may incur fees. Please refer to our pricing page for detailed information."
   }
 ];
+
+export const plans = [
+  {
+    name: 'Basic',
+    price: '$29/month',
+    features: [
+      'Access to basic listings',
+      'Email support',
+      'Limited property saves (5 per month)',
+      'Standard customer service',
+      'Basic property alerts'
+    ],
+  },
+  {
+    name: 'Premium',
+    price: '$59/month',
+    features: [
+      'Access to premium listings',
+      'Priority email support',
+      'Unlimited property saves',
+      'Advanced customer support',
+      'Priority property alerts',
+      'Featured agent services'
+    ],
+    popular: true,
+  },
+  {
+    name: 'Pro',
+    price: '$99/month',
+    features: [
+      'All Premium features',
+      'Direct communication with property owners',
+      'Dedicated account manager',
+      'Monthly insights and trends report',
+      'Personalized recommendations',
+      'Early access to exclusive listings'
+    ],
+  }
+];

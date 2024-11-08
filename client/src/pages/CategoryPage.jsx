@@ -6,29 +6,27 @@ import { useSelector, useDispatch } from "react-redux";
 import { setListings } from "../redux/state";
 import Loader from "../components/Loader";
 import ListingCard from "../components/ListingCard";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 
 const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
- 
 
 const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
-  const { category } = useParams()
+  const { category } = useParams();
+  const dispatch = useDispatch(); 
+  const [sortedListings, setSortedListings] = useState([]);
 
-  const dispatch = useDispatch()
-  const listings = useSelector((state) => state.listings);
+   
 
   const getFeedListings = async () => {
     try {
       const response = await fetch(
-          `${backendUrl}/properties?category=${category}`,
-        {
-          method: "GET",
-        }
+        `${backendUrl}/properties?category=${category}`,
+        { method: "GET" }
       );
-
       const data = await response.json();
       dispatch(setListings({ listings: data }));
+      setSortedListings((data)); 
       setLoading(false);
     } catch (err) {
       console.log("Fetch Listings Failed", err.message);
@@ -39,14 +37,45 @@ const CategoryPage = () => {
     getFeedListings();
   }, [category]);
 
+  // Sort functions
+  const sortByPriceDescending = () => {
+    const sorted = [...sortedListings].sort((a, b) => b.price - a.price);
+    setSortedListings(sorted);
+  };
+
+  const sortByPriceAscending = () => {
+    const sorted = [...sortedListings].sort((a, b) => a.price - b.price);
+    setSortedListings(sorted);
+  };
+
   return loading ? (
     <Loader />
   ) : (
     <>
       <Navbar />
-      <h1 className="title-list">{category} listings</h1>
+ 
+      <header className="category-header">
+        <h1 className="title-list">{category} Listings</h1>
+        <p className="header-description">
+          Discover the best {category} options available for rent or purchase, with curated listings to meet your needs.
+        </p>
+
+
+      </header>
+
+      <div className="sort-buttons">
+        <button onClick={sortByPriceDescending} className="sort-button">
+          Sort by Price (High to Low)
+        </button>
+        <button onClick={sortByPriceAscending} className="sort-button">
+          Sort by Price (Low to High)
+        </button>
+      </div>
+
+
+
       <div className="list">
-      {listings?.map(
+        {sortedListings?.map(
           ({
             _id,
             creator,

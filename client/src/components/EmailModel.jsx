@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/EmailModal.css';
 import { ImCross } from "react-icons/im";
 
-const EmailModal = ({ isOpen, onClose, onSendEmail, senderEmail, receiverEmail }) => {
+const EmailModal = ({ isOpen, onClose, onSendEmail, senderEmail, receiverEmail,message }) => {
     const [clientName, setClientName] = useState('');
     const [isEmailSent, setIsEmailSent] = useState(false);
 
@@ -21,12 +21,20 @@ const EmailModal = ({ isOpen, onClose, onSendEmail, senderEmail, receiverEmail }
 
     if (!isOpen) return null;
 
+    const customStyle = message === 'Email request limit reached. Please upgrade to premium or try after month'
+    ? { color: 'red' }
+    : {};
+
+
+
     return (
         <div className="modal-overlay">
             <div className="modal-content">
+                <div className="button-div">
                 <button type="button" onClick={onClose} className='button-close'>
                     <ImCross/>
                 </button>
+                </div>
 
                 <h2 className='disapper_modal' >Contact Property Owner</h2>
                 <p className='disapper_modal'>We are pleased to inform you that you have an opportunity to connect with the owner of the property.</p>
@@ -40,22 +48,19 @@ const EmailModal = ({ isOpen, onClose, onSendEmail, senderEmail, receiverEmail }
                         onChange={(e) => setClientName(e.target.value)}
                         required
                     />
- 
                     <input
                         type="email"
                         placeholder="Your Email"
                         value={senderEmail}
                         readOnly
                     />
-
                     <div style={{display:'flex',justifyContent:'center'}} >
                         <button type="submit">Send Email</button>
                     </div>
                 </form>
-
-                {isEmailSent && (
-                    <div className="success-alert">
-                        Email has been sent successfully!
+                {message && (
+                    <div className="success-alert" style={customStyle}>
+                        <p>{message}</p>
                     </div>
                 )}
 

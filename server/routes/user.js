@@ -5,7 +5,9 @@ const Listing = require("../models/Listing");
 const EmailRequest = require("../models/emailTracking");
 const express = require('express');
 const router = express.Router();
-
+const PremiumUser = require('../models/PremiumMembers')
+const Razorpay = require('razorpay');  
+const cron = require("node-cron"); 
 
 
 /* GET CONTACT PROPERTY OWNER */
@@ -33,67 +35,78 @@ router.get('/contact-property-owner', async (req, res) => {
     res.status(500).json({ message: 'Error fetching emails', error: err.message });
   }
 });
-
-/* POST REQUEST TO CONNECT */
 router.post('/request-to-connect', async (req, res) => {
   const { receiverEmail, propertyId, nameofclient, userIdSender } = req.body;
-
-  const emailRequest = new EmailRequest({
-    userIdSender,
-    receiverEmail,
-    propertyId
-  });
-  await emailRequest.save();
-
-
-
   try {
-    const propertyListing = await Listing.findById(propertyId).populate('creator');
+    const user = await User.findById(userIdSender);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const isPremiumMember = user.premiumMember;
 
+    console.log(isPremiumMember)
+
+    if (!isPremiumMember) {
+      try {
+        await user.incrementEmailReqSent();
+      } catch (error) {
+        if (error.message === "Email request limit reached.") {
+          return res.status(403).json({ message: "Email request limit reached. Please upgrade to premium or try after month" });
+        }
+        throw error;  
+      }
+    }
+       
+
+    const emailRequest = new EmailRequest({
+      userIdSender,
+      receiverEmail,
+      propertyId,
+    });
+
+    await emailRequest.save();
+
+    const propertyListing = await Listing.findById(propertyId).populate('creator');
     const firstNameOwner = propertyListing.creator.firstName;
     const lastNameOwner = propertyListing.creator.lastName;
 
-
     const emailOptions = {
-      from: process.env.OWNER_EMAIL, // Client's email
-      to: receiverEmail, // Property owner's email
+      from: process.env.OWNER_EMAIL,
+      to: receiverEmail,
       subject: "Phone Number Request for Your Property",
       html: `
         <p>Dear ${firstNameOwner} ${lastNameOwner},</p>
-        <p>A potential buyer/renter, <strong> ${nameofclient} (${nameofclient})</strong>, is interested in your property <small>(id: ${propertyId})</small> listed on RentSmart.</p>
+        <p>A potential buyer/renter, <strong>${nameofclient}</strong>, is interested in your property <small>(id: ${propertyId})</small> listed on RentSmart.</p>
         <p><strong>Message from ${nameofclient}:</strong></p>
         <p>They have requested to connect and discuss further details, asking for your phone number.</p>
         <p>If you wish to share your phone number, please click the link below:</p>
-        <p><a href="http://localhost:3001/users/approve-connect/${propertyId}/${userIdSender}">http://localhost:3001/approve-connect/${propertyId}/${userIdSender}</a></p>
+        <strong>Caution: as you click the button the details will be shared with potential buyer or renter via email.</strong>
+        <p><a href="http://localhost:3001/users/approve-connect/${propertyId}/${userIdSender}">Approve Request</a></p>
         <p>Thank you,<br>The RentSmart Team</p>
       `,
     };
 
-    // Set up Nodemailer transport
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: process.env.SMTP_SECURE,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
-      }
+      },
     });
-
-    // Send the email
-    transporter.sendMail(emailOptions, (error, info) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Error sending email" });
-      }
-      console.log("Email sent:", info.response);
-      res.status(200).json({ message: "Email sent successfully" });
-    });
+ 
+    await transporter.sendMail(emailOptions);
+    res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
-    console.error("Error processing request:", error);
+    if (error.message === "Email request limit reached.") {
+      return res.status(403).json({ message: "Email request limit reached." });
+    }
+    console.error("Request processing error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 
 // Approve Connection Route
 router.get('/approve-connect/:propertyId/:userIdSender', async (req, res) => {
@@ -104,13 +117,9 @@ router.get('/approve-connect/:propertyId/:userIdSender', async (req, res) => {
     const propertyListing = await Listing.findById(propertyId).populate('creator');
 
     const propertyOwner = propertyListing.creator;
-
-    console.log("propertyOwner", propertyOwner.email)
+ 
 
     const sender = await User.findById(userIdSender);
-
-
-    console.log("sender", sender.email)
 
     if (!sender || !propertyOwner) {
       return res.status(404).json({ message: "User not found" });
@@ -150,8 +159,8 @@ router.get('/approve-connect/:propertyId/:userIdSender', async (req, res) => {
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: process.env.SMTP_SECURE,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -278,6 +287,146 @@ router.delete('/:userId/savedProperties/:propertyId', async (req, res) => {
     res.status(500).json({ message: 'Server error while deleting property' });
   }
 });
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+
+});
+router.post('/create-order-premium/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const amount = 17900; 
+
+    // Create a new order with Razorpay
+    const order = await razorpay.orders.create({
+      amount: amount,
+      currency: "INR",
+      receipt: `receipt_order_${userId}`,
+      notes: {
+        userId
+      }
+    });
+
+    res.status(200).json({ orderId: order.id, amount: order.amount, currency: order.currency });
+  } catch (error) {
+    console.error("Error creating Razorpay order:", error);
+    res.status(500).json({ message: 'Error creating order' });
+  }
+});
+
+// Confirm premium user status after successful payment
+router.post('/becomeAPremium-user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { paymentResponse } = req.body;
+
+  try {
+    // Retrieve the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if user is already a premium member
+    if (user.premiumMember) {
+      return res.status(400).json({ message: 'User is already a premium member' });
+    }
+ 
+    if (paymentResponse && paymentResponse.razorpay_order_id) {
+ 
+      const subscriptionStart = new Date();
+      const subscriptionEnd = new Date(subscriptionStart);
+      subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 1);
+ 
+      const premiumMember = new PremiumUser({
+        user: userId,
+        subscriptionStart,
+        subscriptionEnd,
+        paymentId: paymentResponse.razorpay_payment_id,
+        orderId: paymentResponse.razorpay_order_id
+      });
+      await premiumMember.save();
+
+      // Update user's premium status
+      user.premiumMember = true;
+      await user.save();
+
+      return res.status(200).json({ message: 'User upgraded to premium successfully' });
+    } else {
+      return res.status(400).json({ message: 'Payment verification failed' });
+    }
+  } catch (error) {
+    console.error('Error upgrading user to premium:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.get('/checkingForPremium-user/:userId', async (req, res) => {
+  try {
+    const {userId} = req.params; 
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const premiumStatus = user.premiumMember;
+    return res.status(200).json({ premiumStatus });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+router.get('/get-detailsOf-premiumMember/:userId',async (req,res) => {
+  const {userId} = req.params
+
+  const user = await User.findById(userId);
+  const emailUser = user.email
+  const phoneUser = user.phone
+  const name = user.firstName + " " + user.lastName  
+ 
+  const premiumMemberDetails = await PremiumUser.find({user:userId}).populate()
+
+  const sendingData = {
+    premiumMemberDetails,
+    emailUser,
+    phoneUser,
+    name
+
+  }
+
+  return res.status(200).json(sendingData)
+
+} )
+ 
+cron.schedule("0 0 1 * *", async () => {
+  try {
+    const now = new Date();
+
+    await User.updateMany(
+      { premiumMember: false },
+      {
+        $set: {
+          totalNumberReveal: 0,
+          lastNumberReveal: now,   
+          totalEmailReqSent: 0,    
+          lastEmailReqReset: now,  
+        },
+      }
+    );
+
+    console.log("Reveal limits reset for non-premium users at", now);
+  } catch (error) {
+    console.error("Error resetting reveal limits:", error);
+  }
+});
+
+
+
+
+
 
 
 module.exports = router;
