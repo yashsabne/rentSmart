@@ -19,7 +19,7 @@ import HelpAboutPage from "./pages/Help";
 import ForgotPassword from "./pages/ForgetPage";
 import ResetPassword from "./pages/ResetPage";
 import NotFound from "./pages/Notfound";
-
+import { Analytics } from "@vercel/analytics/react"
 function App() {
   return (
     <div>
