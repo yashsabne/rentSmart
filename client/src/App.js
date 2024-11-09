@@ -18,8 +18,7 @@ import PaymentDetails from "./pages/PaymentDetails";
 import HelpAboutPage from "./pages/Help";
 import ForgotPassword from "./pages/ForgetPage";
 import ResetPassword from "./pages/ResetPage";
-import NotFound from "./pages/Notfound";
-import { Analytics } from "@vercel/analytics/react"
+import NotFound from "./pages/Notfound"; 
 function App() {
   return (
     <div>
@@ -47,7 +46,7 @@ function App() {
 
         </Routes>
       </BrowserRouter>
-            <Analytic/>
+ 
     </div>
   );
 }
