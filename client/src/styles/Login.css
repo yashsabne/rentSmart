@@ -1,3 +1,4 @@
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -106,3 +107,25 @@
   padding: 10px 30px 10px 30px;
   border-radius: 10px;
 }
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 60px; /* Adjust for the toggle button */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #888;
+  font-size: 14px;
+  user-select: none; /* Prevent text selection on click */
+  transition: color 0.3s;
+}
+
+ 

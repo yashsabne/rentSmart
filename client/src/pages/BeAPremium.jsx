@@ -93,6 +93,10 @@ const PremiumSubscriptionPage = () => {
   };
 
   const handlePremiumMemberButton = async () => {
+
+    const subBtn = document.querySelector('.subscribe-button');
+    subBtn.innerHTML = "loading Payment Page"
+
     try {
       const orderResponse = await fetch(`${backendUrl}/users/create-order-premium/${userId}`, {
         method: 'POST',
@@ -110,6 +114,7 @@ const PremiumSubscriptionPage = () => {
         order_id: orderId,
         handler: async (paymentResponse) => {
           await confirmPremiumUser(paymentResponse, userId);
+          subBtn.innerHTML = 'Finalizing... Please stay on this page';
           console.log(paymentResponse);
         },
         theme: { color: '#3399cc' }
@@ -117,6 +122,7 @@ const PremiumSubscriptionPage = () => {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
+          subBtn.innerHTML = "Complete the payment"
     } catch (error) {
       console.error('Error initiating payment:', error);
       setMessage(error.message);
@@ -133,8 +139,6 @@ const PremiumSubscriptionPage = () => {
     printWindow.document.close();
     printWindow.print();
   };
-  
-
 
 
   const toggleModal = () => {
@@ -250,9 +254,7 @@ const PremiumSubscriptionPage = () => {
                   Start Premium for Rs.179/month
                 </button>
               )}
-              {message && <p className="subscription-message">{message} means you are offline</p>}
-
-              <p className="subscription-note">Cancel anytime, hassle-free.</p>
+              {message && <p className="subscription-message">{message}</p>}
             </div>
           </div>
         </div>

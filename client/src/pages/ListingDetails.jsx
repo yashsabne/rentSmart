@@ -83,6 +83,11 @@ const ListingDetails = () => {
 
   const handlePromoteProperty = async () => {
     try {
+
+      const promotePropertBtn = document.querySelector('.promote-property-btn');
+
+      promotePropertBtn.innerHTML = "Loading payment page"
+
       const promotionStatusResponse = await fetch(`${backendUrl}/payment/check-promotion-status/${listingId}`);
       const promotionStatus = await promotionStatusResponse.json();
 
@@ -90,6 +95,7 @@ const ListingDetails = () => {
       
       if (promotionStatus.promoted) {
         setMessage("This property is already promoted!");
+         promotePropertBtn.innerHTML = "Promoted already"
         return;  
       }
   
@@ -109,12 +115,14 @@ const ListingDetails = () => {
         order_id: orderId,
         handler: async (paymentResponse) => {
           await confirmAndPromote(paymentResponse, listingId, userId);
+           promotePropertBtn.innerHTML = "Finalizing the things"
         },
         theme: { color: '#3399cc' }
       };
   
       const rzp = new window.Razorpay(options);
       rzp.open();
+       promotePropertBtn.innerHTML = "Complete the payment"
       
     } catch (error) {
       console.log(error);

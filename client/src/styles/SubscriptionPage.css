@@ -158,11 +158,9 @@
 .subscribe-button:hover {
   background-color: #ffb700;
 }
-
-.subscription-note {
-  font-size: 0.9rem;
-  color: #a0aec0;
-  margin-top: 1rem;
+ 
+.subscription-message {
+  margin-top: 13px;
 }
 
 /* Responsive Styles */
