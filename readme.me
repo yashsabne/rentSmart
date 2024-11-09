@@ -1,0 +1,199 @@
+ 
+
+# RentSmart
+
+RentSmart is a feature-rich web application aimed at simplifying property rental and sales.
+The initial project code was cloned from an existing repository, and substantial customizations were added to boost functionality and deliver a seamless user experience.
+RentSmart is built using the MERN stack and provides an intuitive interface for property owners and seekers, complete with advanced features like real-time messaging(under work) , payment integration, and a modern UI/UX.
+
+---
+
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [Contact](#contact)
+
+ 
+## Project Overview
+RentSmart is designed to offer a streamlined experience for renting or buying properties. Whether you are a property owner looking to list properties or a client searching for a new place, RentSmart provides the tools to make the process efficient and reliable. Key features include a dynamic listing page, real-time chat functionality, Razorpay payment integration, and more. With a focus on aesthetics and performance, the platform boasts a dark theme that enhances readability and user engagement.
+
+ 
+
+## Features
+### Core Features
+1. **Property Listings**:
+   - Browse or search for properties using various filters.
+   - View detailed property information, including images, descriptions, and pricing plans.
+
+2. **User Authentication**:
+   - Secure login and registration system using JWT.
+   - Social login via Google OAuth.
+
+3. **User Dashboard**:
+   - A personalized dashboard to manage listed properties, saved properties, and user settings.
+   - Display of user profile information and activity.
+
+4. **Payment Integration**:
+   - Support for multiple payment types, including monthly, yearly, half-yearly, and one-time options, using Razorpay.
+   - Secure and efficient payment processing for transactions.
+
+5. **Real-Time Chat**:
+   - Socket.IO-powered chat for communication between property owners and clients.
+   - Users can initiate conversations from the property details page.
+
+6. **Responsive Design**:
+   - Fully responsive and optimized for various devices, including desktops, tablets, and mobile phones.
+
+7. **Dark Mode**:
+   - A sleek and modern dark theme to enhance visual appeal and reduce eye strain.
+
+### Additional Features
+- **Property Search & Filter**: Enhanced property search options with filters like location, price range, and property type.
+- **File Upload**: Multer and GridFS are used for uploading and managing property images efficiently.
+- **Task Scheduler**: Node-Cron for automating periodic tasks, such as data cleanup.
+- **Cross-Origin Resource Sharing (CORS)**: Enabled to manage requests between frontend and backend seamlessly.
+- **Session Management**: Express-session for secure user sessions.
+
+---
+
+## Technologies Used
+- **Frontend**: React, HTML, CSS, JavaScript
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB, Mongoose
+- **Real-Time Communication**: Socket.IO
+- **Payment Gateway**: Razorpay
+- **Authentication**: Passport.js (Google OAuth), JWT
+- **File Storage**: Multer, Multer-GridFS-Storage
+- **Styling**: CSS, custom animations, dark mode
+
+---
+
+## Prerequisites
+Before you begin, ensure you have met the following requirements:
+- **Node.js** (version 14 or higher)
+- **NPM** or **Yarn** for dependency management
+- **MongoDB Atlas** or a local MongoDB instance
+- **Git** for version control
+
+---
+
+## Installation
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/rentsmart.git
+   cd rentsmart
+   ```
+
+2. **Install Dependencies**:
+   - For the **frontend**:
+     ```bash
+     cd client
+     npm install
+     ```
+   - For the **backend**:
+     ```bash
+     cd server
+     npm install
+     ```
+
+---
+
+## Setup
+### Environment Variables
+Create a `.env` file in the `server` directory and configure the following:
+```env
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+PORT=5000
+```
+
+### Configure Frontend
+In the `client/src` directory, update the API endpoints to match your backend server URL.
+
+---
+
+## Usage
+### Running the Backend
+```bash
+cd server
+npm start
+```
+The backend will be running on `http://localhost:5000`.
+
+### Running the Frontend
+```bash
+cd client
+npm start
+```
+The frontend will be accessible on `http://localhost:3000`.
+
+---
+
+## Project Structure
+```
+rentsmart/
+│
+├── client/                # React frontend
+│   ├── public/            # Public assets
+│   ├── src/               # Source code
+│   ├── package.json       # Frontend dependencies
+│
+├── server/                # Express backend
+│   ├── config/            # Configuration files
+│   ├── controllers/       # Controllers for handling requests
+│   ├── models/            # Mongoose models
+│   ├── routes/            # API routes
+│   ├── utils/             # Utility functions
+│   ├── .env               # Environment variables
+│   ├── index.js           # Main entry point
+│   ├── package.json       # Backend dependencies
+│
+├── .gitignore             # Files and directories to ignore in Git
+├── README.md              # Project documentation
+└── ...                    # Other configuration files
+```
+
+---
+
+  
+
+## Future Enhancements
+1. **Advanced Filtering**: Add more filtering options like property size, neighborhood, and amenities.
+2. **Admin Panel**: Create an admin interface for managing properties, users, and payments.
+3. **Email Notifications**: Integrate email services for user notifications, such as password resets and payment confirmations.
+4. **Analytics Dashboard**: Implement data visualization tools for property owners to track views and engagement metrics.
+
+---
+
+## Contributing
+Contributions are welcome! To contribute:
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Commit your changes (`git commit -m 'Add YourFeature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a Pull Request.
+
+**
+"This project was initially cloned from Phuc Mai's GitHub. I am grateful for the foundational work provided, which served as a starting point. However, RentSmart has since evolved significantly into a more advanced and feature-rich version, thanks to extensive enhancements and refinements that I have implemented. Special thanks to Phuc Mai for laying the groundwork that inspired this development."
+**
+## Contact
+If you have any questions or suggestions about this project, feel free to contact me:
+- **Name**: Yash Navnath Sabne
+- **Email**: yashsabne39@gmail.com
+- **LinkedIn**: [Your LinkedIn Profile](https://www.linkedin.com/in/yash-sabne-77239b287)
+
+---
+
+Feel free to customize this README file as per your requirements and add any additional sections or details as needed.
