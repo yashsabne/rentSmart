@@ -89,8 +89,8 @@ const HelpAboutPage = () => {
             <ul>
                 <li>React.js: A JavaScript library used for building the user interface, providing a dynamic and responsive experience.</li>
                 <li>HTML, CSS, JavaScript: Core web technologies used for layout, styling, and client-side functionality.</li>
-                <li>Bootstrap/Tailwind CSS: Frameworks used for responsive design and pre-built components.</li>
-                <li>Axios: Used for making HTTP requests to interact with the backend.</li>
+                <li>Three Js: for 3D modeling</li>
+         
             </ul>
         </li>
         <li><strong>Backend:</strong>
@@ -109,7 +109,7 @@ const HelpAboutPage = () => {
         </li>
         <li><strong>Payment Integration:</strong>
             <ul>
-                <li>Razorpay/Stripe: Integrated to handle online payments for rent transactions.</li>
+                <li>Razorpay: Integrated to handle online payments for rent transactions.</li>
             </ul>
         </li>
         <li><strong>Real-Time Communication:</strong>
