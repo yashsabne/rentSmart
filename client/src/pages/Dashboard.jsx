@@ -152,7 +152,7 @@ const Dashboard = () => {
 
             <div className="premium-dashboard-userInfo">
 
-          {user && user.profileImagePath ? (
+{/*           {user && user.profileImagePath ? (
   <img
     src={`${backendUrl}/${user.profileImagePath.replace("public", "")}`}
     alt="User Profile"
@@ -161,7 +161,7 @@ const Dashboard = () => {
   />
 ) : (
   <p>No profile photo available</p>
-)}
+)} */}
 
           
 
