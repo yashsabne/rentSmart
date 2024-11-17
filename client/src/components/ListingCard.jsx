@@ -1,4 +1,4 @@
-import { useState } from "react";
+mport { useState, useEffect } from "react";
 import "../styles/ListingCard.css";
 import {
   ArrowForwardIos,
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const ListingCard = ({
   listingId,
-  imageData, // Updated to use image metadata instead of file paths
+  listingPhotoPaths,
   city,
   pincode,
   country,
@@ -18,61 +18,60 @@ const ListingCard = ({
   buyOrSell,
   price,
   paymentType,
-  promoted,
+  promoted
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+
 
   const goToPrevSlide = () => {
     setCurrentIndex(
       (prevIndex) =>
-        (prevIndex - 1 + imageData.length) % imageData.length
+        (prevIndex - 1 + listingPhotoPaths.length) % listingPhotoPaths.length
     );
   };
 
   const goToNextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % imageData.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % listingPhotoPaths.length);
   };
 
   const navigate = useNavigate();
 
-  const onlyOneImg = imageData.length === 1;
-  const hideButton = onlyOneImg ? { display: "none" } : {};
+  const onlyOneImg = listingPhotoPaths.length === 1;
+  const hideButton = onlyOneImg ? { display: 'none' } : {};
 
   const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
-
+ 
   return (
     <div
       className="listing-card"
       onClick={() => {
-        navigate(`/properties/${listingId}`);
+        navigate(/properties/${listingId});
       }}
     >
       <div className="slider-list-container">
         <div
           className="slider-list"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          style={{ transform: translateX(-${currentIndex * 100}%) }}
         >
-          {imageData?.map((_, index) => (
+          {listingPhotoPaths?.map((photo, index) => (
             <div key={index} className="slide-list">
-              {promoted && (
-                <span className="promoted-text">
-                  <span className="promoted-text-tip">promoted</span>
-                  <MdWorkspacePremium />{" "}
-                </span>
-              )}
 
-              {/* Use API endpoint to fetch the image */}
+              {promoted && <span className="promoted-text">
+                <span className="promoted-text-tip" >promoted </span>
+                <MdWorkspacePremium />  </span>}
+
               <img
-                src={`${backendUrl}/image/${listingId}?imageIndex=${index}`}
-                alt={`photo ${index + 1}`}
+               src={${backendUrl}/${photo?.replace("public", "")}}
+
+                alt={photo ${index + 1}}
               />
             </div>
           ))}
         </div>
 
         <div
-          className="prev-button"
-          style={hideButton}
+          className="prev-button" style={hideButton}
           onClick={(e) => {
             e.stopPropagation();
             goToPrevSlide(e);
@@ -81,8 +80,7 @@ const ListingCard = ({
           <ArrowBackIosNew sx={{ fontSize: "15px" }} />
         </div>
         <div
-          className="next-button"
-          style={hideButton}
+          className="next-button" style={hideButton}
           onClick={(e) => {
             e.stopPropagation();
             goToNextSlide(e);
@@ -92,32 +90,24 @@ const ListingCard = ({
         </div>
       </div>
       <div className="card-info">
+
+
         <div>
+
           <h3>
-            {city}, {country} -{" "}
-            <span
-              style={{
-                padding: 0,
-                margin: 0,
-                color: "wheat",
-                fontSize: "medium",
-              }}
-            >
-              {pincode}
-            </span>
+            {city}, {country}, - <span style={{ padding: 0, margin: 0, color: 'wheat', fontSize: 'medium' }}  > {pincode}</span>
           </h3>
           <p>{category}</p>
           <p>{type}</p>
-          <p>{buyOrSell}</p>
+          <p> {buyOrSell}</p>
           <p>
             <span>₹ {price}</span>
-            <span
-              style={{ color: "white", fontSize: "small", marginLeft: 2 }}
-            >
-              ({paymentType})
-            </span>
+
+            <span style={{ color: 'white', fontSize: 'small', marginLeft: 2 }}>({paymentType}) </span>
           </p>
+
         </div>
+
       </div>
     </div>
   );
