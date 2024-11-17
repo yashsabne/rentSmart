@@ -175,7 +175,7 @@ const Dashboard = () => {
             </div>
 
 
-            {premiumMemberStatus ? (
+{/*             {premiumMemberStatus ? (
               <a
                 href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
                 style={{ color: 'white' }}
@@ -195,7 +195,27 @@ const Dashboard = () => {
                   Become Premium
                 </div>
               </a>
-            )}
+            )}        
+ */}
+
+
+            {premiumMemberStatus ? (
+  <a
+    href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
+    style={{ color: 'white' }}
+    className="premium-text-link"
+  >
+    <div className="premium-link"></div>
+  </a>
+) : (
+  <a
+    href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
+    style={{ color: 'white' }}
+    className="become-premium-link"
+  >
+    <div className="premium-link-a">Become Premium</div>
+  </a>
+)}
 
 
 
