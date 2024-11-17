@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ListingCard = ({
   listingId,
-  listingPhotoPaths,
+  listingPhotoPaths = [], 
   city,
   pincode,
   country,
