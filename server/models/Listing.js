@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const ListingSchema = new mongoose.Schema(
   {
     creator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
-    category: {
+    category: {  
       type: String,
       required: true,
     },
@@ -15,8 +15,8 @@ const ListingSchema = new mongoose.Schema(
       required: true,
     },
     buyOrSell: {
-      type: String,
-      required: true,
+      type:String,
+      required:true
     },
     streetAddress: {
       type: String,
@@ -44,46 +44,40 @@ const ListingSchema = new mongoose.Schema(
     },
     amenities: {
       type: Array,
-      default: [],
+      default:[]
     },
-    // New field to store image binary data
-    imageData: [
-      {
-        data: Buffer, // Binary data of the image
-        contentType: String, // MIME type (e.g., 'image/jpeg')
-      },
-    ],
+    listingPhotoPaths: [{ type: String }], // Store photo URLs
     title: {
       type: String,
-      required: true,
+      required: true
     },
     description: {
       type: String,
-      required: true,
+      required: true
     },
     highlight: {
       type: String,
-      required: true,
+      required: true
     },
     highlightDesc: {
       type: String,
-      required: true,
+      required: true
     },
     price: {
       type: Number,
       required: true,
     },
     paymentType: {
-      type: String,
-      required: false,
+      type:String,
+      required:false
     },
     promoted: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  { timestamps: true }
-);
+      type:Boolean,
+      default:false
+    }
+  },  
+  { timestamps: true}
+)
 
-const Listing = mongoose.model("Listing", ListingSchema);
-module.exports = Listing;
+const Listing = mongoose.model("Listing", ListingSchema )
+module.exports = Listing  
