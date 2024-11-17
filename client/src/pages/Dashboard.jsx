@@ -152,20 +152,18 @@ const Dashboard = () => {
 
             <div className="premium-dashboard-userInfo">
 
-          {user && user.profileImagePath ? (
-  <img
-    src={`${backendUrl}/${user.profileImagePath.replace("public", "")}`}
-    alt="User Profile"
-    className="dashboard-profile-photo"
-    style={{ borderColor: premiumMemberStatus ? 'gold' : 'white' }}
-  />
-) : (
-  <p>No profile photo available</p>
-)}
-
-          
-
-              
+              {user && user.profileImagePath ? (
+                <img
+                  src={`${backendUrl}/${user.profileImagePath.replace("public", "")}`}
+                  alt="User Profile"
+                  className="dashboard-profile-photo"
+                  style={{ borderColor: premiumMemberStatus ? 'gold' : 'white' }}
+                />
+              ) : (
+                <p>No profile photo available</p>
+              )
+              }
+    
               <div className="user-info-text">
                 <h2>{user?.firstName ? `${user.firstName} ${user.lastName}` : "Username"}</h2>
                 <p>Email: {user?.email || "user@example.com"}</p>
