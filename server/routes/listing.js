@@ -4,12 +4,22 @@ const multer = require("multer");
 const Listing = require("../models/Listing");
 const User = require("../models/User")
 
-const storage = multer.memoryStorage(); // Store files in memory
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads/"); // Store uploaded files in the 'uploads' folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original file name
+  },
+});
+
 const upload = multer({ storage });
+
 
 /* CREATE LISTING */
 router.post("/create", upload.array("listingPhotos"), async (req, res) => {
   try {
+    /* Take the information from the form */
     const {
       creator,
       category,
@@ -30,22 +40,17 @@ router.post("/create", upload.array("listingPhotos"), async (req, res) => {
       highlight,
       highlightDesc,
       price,
-      paymentType,
+      paymentType
     } = req.body;
 
-    const listingPhotos = req.files;
+    const listingPhotos = req.files
 
     if (!listingPhotos) {
-      return res.status(400).send("No files uploaded.");
+      return res.status(400).send("No file uploaded.")
     }
 
-    // Convert files to image data for database storage
-    const imageData = listingPhotos.map((file) => ({
-      data: file.buffer, // Binary data of the file
-      contentType: file.mimetype, // MIME type, e.g., 'image/jpeg'
-    }));
+    const listingPhotoPaths = listingPhotos.map((file) => file.path)
 
-    // Create new listing
     const newListing = new Listing({
       creator,
       category,
@@ -61,45 +66,24 @@ router.post("/create", upload.array("listingPhotos"), async (req, res) => {
       bedCount,
       bathroomCount,
       amenities,
-      imageData, // Save image data in the database
+      listingPhotoPaths,
       title,
       description,
       highlight,
       highlightDesc,
       price,
-      paymentType,
-    });
+      paymentType
+      
+    })
 
-    await newListing.save();
+    await newListing.save()
 
-    res.status(200).json(newListing);
+    res.status(200).json(newListing)
   } catch (err) {
-    res.status(409).json({ message: "Failed to create listing", error: err.message });
-    console.error(err);
+    res.status(409).json({ message: "Fail to create Listing", error: err.message })
+    console.log(err)
   }
 });
-
-router.get("/image/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const listing = await Listing.findById(id);
-
-    if (!listing || !listing.imageData || listing.imageData.length === 0) {
-      return res.status(404).send("Image not found.");
-    }
-
-    // Send the first image as an example
-    const image = listing.imageData[0];
-
-    res.set("Content-Type", image.contentType); // Set the content type (e.g., 'image/jpeg')
-    res.send(image.data); // Send the binary image data
-  } catch (err) {
-    res.status(500).json({ message: "Failed to retrieve image", error: err.message });
-    console.error(err);
-  }
-});
-
 
 /* GET lISTINGS BY CATEGORY */
 router.get("/", async (req, res) => {
