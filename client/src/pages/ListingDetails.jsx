@@ -216,7 +216,7 @@ const ListingDetails = () => {
         <div className="host-section">
           <div className="profile-card">
           <img
-    src={`${backendUrl}/auth/get-profile-picture-user/${userId}`}
+    src={`${backendUrl}/auth/get-profile-picture-user/${listing.creator._id}`}
     alt="User Profile"
     className="dashboard-profile-photo"
  
