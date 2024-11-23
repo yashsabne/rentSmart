@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import gsap from "gsap";
+import React, { useEffect, useState } from "react"; 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ListingCard from "../components/ListingCard";
@@ -136,7 +135,7 @@ const AllProperties = () => {
                 className="listing-card"
                 listingId={property._id}
                 creator={property.creator}
-                listingPhotoPaths={property.listingPhotoPaths}
+                photos={property.listingPhotos}
                 city={property.city}
                 pincode={property.pincode}
                 country={property.country}
@@ -147,6 +146,7 @@ const AllProperties = () => {
                 paymentType={property.paymentType}
                 promoted={property.promoted}
               />
+              
             ))}
 
           </div>

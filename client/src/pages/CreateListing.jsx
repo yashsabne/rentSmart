@@ -21,6 +21,7 @@ const CreateListing = () => {
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
   const [buyOrSell, setbuyOrSell] = useState("");
+  const [listcreated, setlistcreated] = useState(false);
  
   const [formLocation, setFormLocation] = useState({
     streetAddress: "",
@@ -124,6 +125,7 @@ const CreateListing = () => {
   const navigate = useNavigate();
 
   const handlePost = async (e) => {
+    setlistcreated(true)
     e.preventDefault();
 
     try { 
@@ -477,6 +479,7 @@ const CreateListing = () => {
                 onChange={handleChangeDescription} className="select-container"
                 required
               >
+                <option value="">select</option>
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
                 <option value="halfyearly">Half yearly</option>
@@ -491,7 +494,7 @@ const CreateListing = () => {
           </div>
 
           <button className="submit_btn" type="submit">
-            CREATE YOUR LISTING
+           {listcreated?"PROCESSING YOUR REQUEST":"CREATE YOUR LISTING" } 
           </button>
         </form>
       </div>

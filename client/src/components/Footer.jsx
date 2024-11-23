@@ -1,6 +1,6 @@
 import "../styles/Footer.css"
 import { LocalPhone, Email } from "@mui/icons-material"
-
+import { Link } from "react-router-dom"; 
 const Footer = () => {
 
   const year = new Date().getFullYear();
@@ -23,7 +23,7 @@ const Footer = () => {
           <Email />
           <p>yashsabne39@gmail.com</p>
         </div>
-        <a href="/help" style={{color:'yellow',textDecoration:'none'}} > <div> 😊 info about project </div></a>     
+        <Link to="/help" style={{color:'yellow',textDecoration:'none'}} > <div> 😊 info about project </div></Link>     
    
       </div>
    

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt"); // Don't forget to import bcrypt if you're using it for hashing
+const bcrypt = require("bcrypt");   
 
 // Define the User schema
 const UserSchema = new mongoose.Schema(
@@ -27,10 +27,6 @@ const UserSchema = new mongoose.Schema(
     },
     resetToken: String,
     resetTokenExpiry: Date,
-    profileImagePath: {
-      type: String,
-      default: "",
-    },
     propertyList: [
       {
         type: mongoose.Schema.Types.ObjectId,

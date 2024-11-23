@@ -157,9 +157,9 @@ const ListingDetails = () => {
         setIsSliding(false);
         setCurrentImageIndex((prevIndex) => {
           if (direction === "next") {
-            return prevIndex === listing.listingPhotoPaths.length - 1 ? 0 : prevIndex + 1;
+            return prevIndex === listing.listingPhotos.length - 1 ? 0 : prevIndex + 1;
           } else {
-            return prevIndex === 0 ? listing.listingPhotoPaths.length - 1 : prevIndex - 1;
+            return prevIndex === 0 ? listing.listingPhotos.length - 1 : prevIndex - 1;
           }
         });
       }, 1000);
@@ -198,11 +198,12 @@ const ListingDetails = () => {
           </button>
           <div className="slider-image-wrapper">
             <img
-              src={`${backendUrl}/${listing.listingPhotoPaths[currentImageIndex].replace("public", "")}`}
+              src={`${backendUrl}/properties/photo/${listing._id}/${currentImageIndex}`} // Updated to fetch from the backend
               alt={`Listing Image ${currentImageIndex + 1}`}
-              className={`slider-image ${isSliding ? "slide-animation" : ""} gsapImg`}
+              className={`slider-image ${isSliding ? "slide-animation" : ""}`}
             />
           </div>
+
           <button
             onClick={() => changeSlide("next")}
             className={`slider-button next-button ${isSliding ? "disabled" : ""}`}
@@ -210,22 +211,16 @@ const ListingDetails = () => {
             ▶
           </button>
 
-          <div className="slider-indicators">
-            {listing.listingPhotoPaths.map((_, index) => (
-              <span
-                key={index}
-                className={`indicator-dot ${index === currentImageIndex ? "active" : ""}`}
-              ></span>
-            ))}
-          </div>
         </div>
 
         <div className="host-section">
           <div className="profile-card">
-            <img
-              src={`${backendUrl}/${listing.creator.profileImagePath.replace("public", "")}`}
-              alt="Host"
-            />
+          <img
+    src={`${backendUrl}/auth/get-profile-picture-user/${userId}`}
+    alt="User Profile"
+    className="dashboard-profile-photo"
+ 
+  />
             <h3>
               {user._id === listing.creator._id
                 ? "Hosted by Me"

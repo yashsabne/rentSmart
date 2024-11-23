@@ -3,7 +3,7 @@ import "../styles/List.css";
 import Navbar from "../components/Navbar";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setListings } from "../redux/state";
+ 
 import Loader from "../components/Loader";
 import ListingCard from "../components/ListingCard";
 import Footer from "../components/Footer";
@@ -12,6 +12,7 @@ const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
 
 const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
+  // const [listings, setListings] = useState([]);
   const { category } = useParams();
   const dispatch = useDispatch(); 
   const [sortedListings, setSortedListings] = useState([]);
@@ -25,7 +26,7 @@ const CategoryPage = () => {
         { method: "GET" }
       );
       const data = await response.json();
-      dispatch(setListings({ listings: data }));
+ 
       setSortedListings((data)); 
       setLoading(false);
     } catch (err) {
@@ -79,7 +80,7 @@ const CategoryPage = () => {
           ({
             _id,
             creator,
-            listingPhotoPaths,
+            listingPhotos,
             city,
             pincode,
             country,
@@ -96,7 +97,7 @@ const CategoryPage = () => {
               key={_id}
               listingId={_id}
               creatorName={`${creator.firstName} ${creator.lastName}`}
-              listingPhotoPaths={listingPhotoPaths}
+              photos={listingPhotos}
               city={city}
               pincode={pincode}
               country={country}
@@ -112,7 +113,9 @@ const CategoryPage = () => {
           )
         )}
       </div>
+      <div style={{position:"absolute",bottom:0,width:'100%'} }>
       <Footer />
+      </div>
     </>
   );
 };

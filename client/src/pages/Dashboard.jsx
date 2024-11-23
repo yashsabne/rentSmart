@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPropertyList } from "../redux/state";
+import {  useSelector } from "react-redux"; 
+import { Link } from "react-router-dom"
 import Navbar from "../components/Navbar";
 import ListingCard from "../components/ListingCard";
 import Loader from "../components/Loader";
@@ -18,8 +18,9 @@ const Dashboard = () => {
   const [showClearModal, setShowClearModal] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(5);
   const [premiumMemberStatus, setpremiumMemberStatus] = useState(false);
+  const [propertyList, setpropertyList] = useState([]);
 
   const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
 
@@ -28,21 +29,29 @@ const Dashboard = () => {
     setVisibleCount((prevCount) => prevCount + 10);
   };
 
-  const user = useSelector((state) => state.user);
-  const propertyList = user?.propertyList || [];
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);  
   const userId = user?._id;
 
   const getPropertyList = async () => {
     try {
       const response = await fetch(`${backendUrl}/users/${userId}/properties`);
       const data = await response.json();
-      dispatch(setPropertyList(data));
+  
+      // Ensure data is structured as per the new API
+      const updatedData = data.map((property) => ({
+        ...property,
+        photos: property.photos || [], // Replace `listingPhotoPaths` with `photos`
+      }));
+
+      // console.log(updatedData)
+  
+      setpropertyList(updatedData);
       setLoading(false);
     } catch (err) {
       console.log("Fetch all properties failed", err.message);
     }
   };
+  
 
   const getRecentActivities = async () => {
     if (!user || !user._id) return;
@@ -152,9 +161,9 @@ const Dashboard = () => {
 
             <div className="premium-dashboard-userInfo">
 
-          {user && user.profileImagePath ? (
+          {user ? (
   <img
-    src={`${backendUrl}/${user.profileImagePath.replace("public", "")}`}
+    src={`${backendUrl}/auth/get-profile-picture-user/${userId}`}
     alt="User Profile"
     className="dashboard-profile-photo"
     style={{ borderColor: premiumMemberStatus ? 'gold' : 'white' }}
@@ -163,9 +172,7 @@ const Dashboard = () => {
   <p>No profile photo available</p>
 )}
 
-          
-
-              
+            
               <div className="user-info-text">
                 <h2>{user?.firstName ? `${user.firstName} ${user.lastName}` : "Username"}</h2>
                 <p>Email: {user?.email || "user@example.com"}</p>
@@ -196,22 +203,15 @@ const Dashboard = () => {
                 </div>
               </a>
             )}
-
-
-
-
-
-
           </div>
         </div>
-
 
         <div className="dashboard-property-section">
           <h1 style={{ display: 'flex', alignItems: "center", height: '60px' }}>
             Your Listed Properties
-            <a style={{ position: 'relative', top: '6px', color: 'white', marginLeft: '15px' }} href="/create-listing">
+            <Link style={{ position: 'relative', top: '6px', color: 'white', marginLeft: '15px' }} to="/create-listing">
               <CiCirclePlus />
-            </a>
+            </Link>
           </h1>
           <div className="dashboard-property-list">
             {propertyList.length > 0 ? (
@@ -219,7 +219,7 @@ const Dashboard = () => {
                 ({
                   _id,
                   creator,
-                  listingPhotoPaths,
+                  listingPhotos,
                   city,
                   pincode,
                   country,
@@ -232,20 +232,21 @@ const Dashboard = () => {
 
                 }) => (
                   <ListingCard
-                    key={_id}
-                    listingId={_id}
-                    creator={creator}
-                    listingPhotoPaths={listingPhotoPaths}
-                    city={city}
-                    pincode={pincode}
-                    country={country}
-                    category={category}
-                    type={type}
-                    buyOrSell={buyOrSell}
-                    price={price}
-                    paymentType={paymentType}
-                    promoted={promoted}
-                  />
+                  key={_id}
+                  listingId={_id}
+                  creator={creator}
+                  photos={listingPhotos} // Pass new photos field
+                  city={city}
+                  pincode={pincode}
+                  country={country}
+                  category={category}
+                  type={type}
+                  buyOrSell={buyOrSell}
+                  price={price}
+                  paymentType={paymentType}
+                  promoted={promoted}
+                />
+                
                 )
               )
             ) : (
@@ -300,7 +301,10 @@ const Dashboard = () => {
           </h2>
           <div className="dashboard-activities-list">
             {recentActivities.length > 0 ? (
-              recentActivities.map((activity, index) => (
+              // recentActivities.map((activity, index) => 
+                recentActivities.slice(0, visibleCount).map((activity, index) =>
+                
+                (
                 <div key={index} className="dashboard-activity-card">
                   <p>
                     <strong>To:</strong> {activity.receiverEmail}
@@ -316,6 +320,13 @@ const Dashboard = () => {
             ) : (
               <p>No recent activities.</p>
             )}
+               {visibleCount < recentActivities.length && (
+                <div className="dash-more" >
+            <button onClick={showMorePayments} className="show-more-button-dash">
+              Show More
+            </button>
+            </div>
+          )}
           </div>
         </div>
 
@@ -342,9 +353,11 @@ const Dashboard = () => {
             <p>No payment history available.</p>
           )}
           {visibleCount < paymentHistory.length && (
-            <button onClick={showMorePayments} className="show-more-button">
+             <div className="dash-more" >
+            <button onClick={showMorePayments} className="show-more-button-dash">
               Show More
             </button>
+             </div>
           )}
         </div>
       </div>

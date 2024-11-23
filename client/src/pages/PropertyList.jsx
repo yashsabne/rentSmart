@@ -2,15 +2,14 @@ import "../styles/List.css";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import ListingCard from "../components/ListingCard";
-import { useEffect, useState } from "react";
-import { setPropertyList } from "../redux/state";
+import { useEffect, useState } from "react"; 
 import Loader from "../components/Loader";
 import Footer from "../components/Footer"
 
 const PropertyList = () => {
   const [loading, setLoading] = useState(true)
-  const user = useSelector((state) => state.user)
-  const propertyList = user?.propertyList;
+  const [propertyList, setpropertyList] = useState([]);
+  const user = useSelector((state) => state.user) 
   const dispatch = useDispatch();
 
   const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
@@ -23,7 +22,7 @@ const PropertyList = () => {
       })
       const data = await response.json()
       console.log(data)
-      dispatch(setPropertyList(data))
+      (setpropertyList(data))
       setLoading(false)
     } catch (err) {
       console.log("Fetch all properties failed", err.message)

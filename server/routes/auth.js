@@ -7,17 +7,9 @@ const session = require('express-session');
 const nodemailer = require('nodemailer');
 const User = require("../models/User");
 const express = require('express');
+const UserProfileImages = require('../models/UserProfilePhotos')
   
- 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads/");  
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);  
-  },
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
  
 
@@ -75,45 +67,80 @@ router.post("/verify-otp", (req, res) => {
     res.status(400).json({ success: false, message: 'Invalid OTP' });
   }
 });
- 
 router.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
-    const { firstName, lastName, email, password,phone } = req.body;
-    const profileImage = req.file;
+      const { firstName, lastName, email, password, phone } = req.body;
+      const profileImage = req.file;
 
-    if (!profileImage) {
-      return res.status(400).send("No file uploaded");
-    }
 
-    const profileImagePath = profileImage.path;
- 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: "User already exists!" });
-    }
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+          return res.status(409).json({ message: "User already exists!" });
+      }
 
-    // Hash the password
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
+      if (!profileImage) {
+        return res.status(400).json({ message: "Profile image is required!" });
+      }
+      if (!["image/jpeg", "image/png"].includes(profileImage.mimetype)) {
+        return res.status(400).json({ message: "Invalid image format. Only JPEG and PNG are allowed." });
+      }
 
-    // Create a new User
-    const newUser = new User({
-      firstName,
-      lastName,
-      phone,
-      email,
-      password: hashedPassword,
-      profileImagePath,
-    });
+      // Hash the password
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Save the new User
-    await newUser.save();
-    res.status(200).json({ message: "User registered successfully!", user: newUser });
+      // Create a new User with binary image
+      const newUser = new User({
+          firstName,
+          lastName,
+          phone,
+          email,
+          password: hashedPassword,
+          profileImage: {
+              data: profileImage.buffer,
+              contentType: profileImage.mimetype,
+          },
+      });
+
+      const newImageProfile = new UserProfileImages({
+        userId: newUser._id, // Reference the newly created user's ID
+        profileImage: {
+          data: profileImage.buffer,
+          contentType: profileImage.mimetype,
+        },
+      });
+      await newImageProfile.save();
+
+      // Save the new User
+      await newUser.save();
+      res.status(200).json({ message: "User registered successfully!", user: newUser });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Registration failed!", error: err.message });
+      console.error(err);
+      res.status(500).json({ message: "Registration failed!", error: err.message });
   }
 });
+
+router.get('/get-profile-picture-user/:userId', async (req,res) => {
+
+  const {userId} = req.params
+
+  const userProfile = await UserProfileImages.findOne({userId:userId});
+
+  
+
+  if (!userProfile) {
+    return res.status(404).send("User not found.");
+  }
+
+  if (!userProfile.profileImage) {
+    return res.status(404).send("Photo not found.");
+  }
+
+  const photo = userProfile.profileImage;
+
+  res.contentType(photo.contentType);
+  res.send(photo.data);
+})
 
 
 // Configure the nodemailer transporter

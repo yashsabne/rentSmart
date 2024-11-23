@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery({ maxWidth: 760 });
+  const isMobile = useMediaQuery({ maxWidth: 960 });
 
 
 
@@ -143,7 +143,7 @@ const Navbar = () => {
       {isMobile && (
         <div className="mobile_nav">
           <button className="navbar_toggle" onClick={toggleMobileMenu}>
-            <img src={isOpen ? "assets/close.svg" : "assets/menu.svg"} alt="toggle" />
+            <img src={isOpen ? "https://icons.veryicon.com/png/o/business/process-bank-portal-project-phase-iii/close-tab-bar.png" : "https://i.pinimg.com/originals/26/9d/d1/269dd16fa1f5ff51accd09e7e1602267.png"} alt="toggle btn" />
           </button>
 
           {dropdownMenu && (

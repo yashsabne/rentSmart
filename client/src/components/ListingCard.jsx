@@ -1,12 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/ListingCard.css";
 import { ArrowForwardIos, ArrowBackIosNew } from "@mui/icons-material";
 import { MdWorkspacePremium } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
+// Utility function to convert image Buffer to Base64 in the browser
+const convertToBase64 = (photo) => {
+  return new Promise((resolve, reject) => {
+    if (photo?.data?.data) {
+      const buffer = new Uint8Array(photo.data.data);
+      const blob = new Blob([buffer], { type: photo.contentType });
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        resolve(reader.result); // This gives the base64 string
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(blob);
+    } else {
+      resolve(photo); // If it's already a URL or image
+    }
+  });
+};
+
 const ListingCard = ({
   listingId,
-  listingPhotoPaths = [], 
+  photos = [], // Updated to photos (from the backend)
   city,
   pincode,
   country,
@@ -15,26 +38,32 @@ const ListingCard = ({
   buyOrSell,
   price,
   paymentType,
-  promoted
+  promoted,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageUrls, setImageUrls] = useState([]); // State to hold the Base64 image URLs
+
+  // Convert all images to Base64 upon loading
+  useEffect(() => {
+    const loadImages = async () => {
+      const base64Images = await Promise.all(photos.map((photo) => convertToBase64(photo)));
+      setImageUrls(base64Images); // Store the Base64 strings in state
+    };
+
+    loadImages();
+  }, [photos]);
 
   const goToPrevSlide = () => {
-    setCurrentIndex(
-      (prevIndex) =>
-        (prevIndex - 1 + listingPhotoPaths.length) % listingPhotoPaths.length
-    );
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + imageUrls.length) % imageUrls.length);
   };
 
   const goToNextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % listingPhotoPaths.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
   };
 
   const navigate = useNavigate();
-  const onlyOneImg = listingPhotoPaths.length === 1;
+  const onlyOneImg = imageUrls.length === 1;
   const hideButton = onlyOneImg ? { display: "none" } : {};
-
-  const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
 
   return (
     <div
@@ -48,18 +77,17 @@ const ListingCard = ({
           className="slider-list"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {listingPhotoPaths?.map((photo, index) => (
+          {imageUrls.map((photo, index) => (
             <div key={index} className="slide-list">
               {promoted && (
                 <span className="promoted-text">
-                  <span className="promoted-text-tip">Promoted </span>
+                  <span className="promoted-text-tip">Promoted</span>
                   <MdWorkspacePremium />
                 </span>
               )}
-              <img
-                src={`${backendUrl}/${photo?.replace("public", "")}`}
-                alt={`photo ${index + 1}`}
-              />
+
+              {/* Render image with converted Base64 */}
+              <img src={photo} alt={`photo ${index + 1}`} />
             </div>
           ))}
         </div>
@@ -95,7 +123,7 @@ const ListingCard = ({
                 padding: 0,
                 margin: 0,
                 color: "wheat",
-                fontSize: "medium"
+                fontSize: "medium",
               }}
             >
               {pincode}
@@ -110,7 +138,7 @@ const ListingCard = ({
               style={{
                 color: "white",
                 fontSize: "small",
-                marginLeft: 2
+                marginLeft: 2,
               }}
             >
               ({paymentType})

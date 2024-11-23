@@ -10,15 +10,19 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import state from "./state";
+import createCompressor from "redux-persist-transform-compress"; 
+import userReducer from "./state";  
 
+ 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
+  whitelist: ["user"], 
 };
 
-const persistedReducer = persistReducer(persistConfig, state);
+
+const persistedReducer = persistReducer(persistConfig, userReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -32,4 +36,4 @@ export const store = configureStore({
 
 export let persistor = persistStore(store);
 
-
+ 

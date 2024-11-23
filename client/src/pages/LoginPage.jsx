@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/Login.css";
 import { setLogin } from "../redux/state";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom"; 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -98,8 +98,8 @@ const LoginPage = () => {
           </span>
         </div>
         <div className="login-links">
-          <a href="/forgot-password">Forgot Password?</a>
-          <a href="/register">Don't have an account? Sign Up Here</a>
+          <Link to="/forgot-password">Forgot Password?</Link>
+          <Link to="/register">Don't have an account? Sign Up Here</Link>
         </div>
       </div>
     </div>
