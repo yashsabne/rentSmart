@@ -161,18 +161,16 @@ const Dashboard = () => {
 
             <div className="premium-dashboard-userInfo">
 
-          {user && user.profileImagePath ? (
-  <img
-    src={`${backendUrl}/auth/get-profile-picture-user/${userId}`}
-    alt="User Profile"
-    className="dashboard-profile-photo"
-    style={{ borderColor: premiumMemberStatus ? 'gold' : 'white' }}
-  />
-) : (
-  <p>No profile photo available</p>
-)}
-
-          
+              {user ? (
+      <img
+        src={`${backendUrl}/auth/get-profile-picture-user/${userId}`}
+        alt="User Profile"
+        className="dashboard-profile-photo"
+        style={{ borderColor: premiumMemberStatus ? 'gold' : 'white' }}
+      />
+    ) : (
+      <p>No profile photo available</p>
+    )}
 
             
               <div className="user-info-text">
@@ -184,7 +182,7 @@ const Dashboard = () => {
             </div>
 
 
-{/*             {premiumMemberStatus ? (
+            {premiumMemberStatus ? (
               <a
                 href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
                 style={{ color: 'white' }}
@@ -205,14 +203,9 @@ const Dashboard = () => {
                 </div>
               </a>
             )}
-
-
-
-
-
-
           </div>
         </div>
+
 
         <div className="dashboard-property-section">
           <h1 style={{ display: 'flex', alignItems: "center", height: '60px' }}>
