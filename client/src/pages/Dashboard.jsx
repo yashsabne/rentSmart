@@ -161,7 +161,7 @@ const Dashboard = () => {
 
             <div className="premium-dashboard-userInfo">
 
-          {user ? (
+          {user && user.profileImagePath ? (
   <img
     src={`${backendUrl}/auth/get-profile-picture-user/${userId}`}
     alt="User Profile"
@@ -171,6 +171,8 @@ const Dashboard = () => {
 ) : (
   <p>No profile photo available</p>
 )}
+
+          
 
             
               <div className="user-info-text">
@@ -182,7 +184,7 @@ const Dashboard = () => {
             </div>
 
 
-            {premiumMemberStatus ? (
+{/*             {premiumMemberStatus ? (
               <a
                 href={`users/discover-premium-version?userId=${user._id}&PremiumStatus=${premiumMemberStatus}`}
                 style={{ color: 'white' }}
@@ -203,6 +205,12 @@ const Dashboard = () => {
                 </div>
               </a>
             )}
+
+
+
+
+
+
           </div>
         </div>
 
