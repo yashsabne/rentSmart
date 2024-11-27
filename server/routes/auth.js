@@ -12,7 +12,6 @@ const UserProfileImages = require('../models/UserProfilePhotos')
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
  
-
 let otpHolder = [];
  
 router.post("/send-otp-email", async (req, res) => {

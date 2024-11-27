@@ -20,6 +20,7 @@ const PremiumSubscriptionPage = () => {
 
   const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
   const razorpayKey = process.env.REACT_APP_RAZORPAY_KEY;
+  console.log(razorpayKey)
 
   console.log(premiumDetailsData)
 

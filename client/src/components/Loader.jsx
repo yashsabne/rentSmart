@@ -3,10 +3,12 @@ import "../styles/Loader.css";
 
 const Loader = () => {
   const [showButton, setShowButton] = useState(true);
+  const [showCube,setShowCube] = useState(false)
   useEffect(() => { 
     const timer = setTimeout(() => {
       setShowButton(false); 
-    }, 2000);
+      setShowCube (true)
+    }, 5000);
  
     return () => clearTimeout(timer);
   }, []);
@@ -15,13 +17,17 @@ const Loader = () => {
   return (
     <div className="main-loader">
       <div className="cube-loader">
+
+      {showCube && 
+
         <div className="cube"></div>
 
-        {showButton && 
-        <div className="loading-message">loading..</div>
-        }
+      }
 
       </div>
+      {showButton && 
+        <div className="loading-message">Using a free database version, please wait a moment for it to load.</div>
+      }
     </div>
   );
 };
