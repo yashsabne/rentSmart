@@ -7,7 +7,7 @@ const Loader = () => {
   useEffect(() => { 
     const timer = setTimeout(() => {
       setShowButton(false); 
-    }, 2000);
+    }, 5000);
  
     return () => clearTimeout(timer);
   }, []);

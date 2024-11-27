@@ -11,10 +11,8 @@ import Footer from "../components/Footer";
 const backendUrl = process.env.REACT_APP_BASE_BACKEND_URL;
 
 const CategoryPage = () => {
-  const [loading, setLoading] = useState(true);
-  // const [listings, setListings] = useState([]);
-  const { category } = useParams();
-  const dispatch = useDispatch(); 
+  const [loading, setLoading] = useState(true); 
+  const { category } = useParams(); 
   const [sortedListings, setSortedListings] = useState([]);
 
    
@@ -78,8 +76,7 @@ const CategoryPage = () => {
       <div className="list">
         {sortedListings?.map(
           ({
-            _id,
-            creator,
+            _id, 
             listingPhotos,
             city,
             pincode,
@@ -95,8 +92,7 @@ const CategoryPage = () => {
           }) => (
             <ListingCard
               key={_id}
-              listingId={_id}
-              creatorName={`${creator.firstName} ${creator.lastName}`}
+              listingId={_id} 
               photos={listingPhotos}
               city={city}
               pincode={pincode}
@@ -110,10 +106,12 @@ const CategoryPage = () => {
               highlight={highlight}
               highlightDesc={highlightDesc}
             />
+            
           )
         )}
       </div>
-      <div style={{position:"absolute",bottom:0,width:'100%'} }>
+      
+      <div style={{position:"absolute", marginTop:'100px' ,width:'100%'} }>
       <Footer />
       </div>
     </>
