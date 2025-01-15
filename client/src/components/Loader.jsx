@@ -6,7 +6,8 @@ const Loader = () => {
   const [showCube,setShowCube] = useState(false)
   useEffect(() => { 
     const timer = setTimeout(() => {
-      setShowButton(false); 
+      setShowButton(false)
+      setShowCube(true); 
     }, 5000);
  
     return () => clearTimeout(timer);
